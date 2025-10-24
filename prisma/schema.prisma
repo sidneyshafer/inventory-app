@@ -9,56 +9,32 @@ datasource db {
 }
 
 model Roles {
-  Role_ID          Int      @id @default(autoincrement())
-  Description      String   @db.VarChar(255)
-  Created_Datetime DateTime @default(now()) @db.Timestamp(6)
-  Updated_Datetime DateTime @default(now()) @db.Timestamp(6)
+  Role_ID          Int       @id @default(autoincrement())
+  Description      String    @db.VarChar(255)
+  Created_Datetime DateTime  @default(now()) @db.Timestamp(6)
+  Updated_Datetime DateTime? @db.Timestamp(6)
   Users            Users[]
 }
 
 model Status {
-  Status_ID                      Int              @id @default(autoincrement())
-  Description                    String           @db.VarChar(255)
-  Created_Datetime               DateTime         @default(now()) @db.Timestamp(6)
-  Updated_Datetime               DateTime         @default(now()) @db.Timestamp(6)
-  Created_By                     Int?
-  Updated_By                     Int?
-  Is_Active                      Boolean          @default(true)
-  Purchase_Order                 Purchase_Order[]
-  Users_Status_Created_ByToUsers Users?           @relation("Status_Created_ByToUsers", fields: [Created_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction, map: "Created_By_fk")
-  Users_Status_Updated_ByToUsers Users?           @relation("Status_Updated_ByToUsers", fields: [Updated_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction, map: "Updated_By_fk")
+  Status_ID        Int              @id @default(autoincrement())
+  Description      String           @db.VarChar(255)
+  Created_Datetime DateTime         @default(now()) @db.Timestamp(6)
+  Updated_Datetime DateTime?        @db.Timestamp(6)
+  Is_Active        Boolean          @default(true)
+  Purchase_Order   Purchase_Order[]
 }
 
 model Users {
-  User_ID                                                   Int                   @id(map: "User_pkey") @default(autoincrement())
-  First_Name                                                String                @db.VarChar(255)
-  Last_Name                                                 String                @db.VarChar(255)
-  Email                                                     String                @db.VarChar(255)
-  Role_ID                                                   Int
-  Created_Datetime                                          DateTime              @default(now()) @db.Timestamp(6)
-  Updated_Datetime                                          DateTime              @default(now()) @db.Timestamp(6)
-  Audit_Logs                                                Audit_Logs[]
-  Contacts_Contacts_Created_ByToUsers                       Contacts[]            @relation("Contacts_Created_ByToUsers")
-  Contacts_Contacts_Updated_ByToUsers                       Contacts[]            @relation("Contacts_Updated_ByToUsers")
-  Item_Location_Item_Location_Created_ByToUsers             Item_Location[]       @relation("Item_Location_Created_ByToUsers")
-  Item_Location_Item_Location_Updated_ByToUsers             Item_Location[]       @relation("Item_Location_Updated_ByToUsers")
-  Items_Items_Created_ByToUsers                             Items[]               @relation("Items_Created_ByToUsers")
-  Items_Items_Updated_ByToUsers                             Items[]               @relation("Items_Updated_ByToUsers")
-  Locations_Locations_Created_ByToUsers                     Locations[]           @relation("Locations_Created_ByToUsers")
-  Locations_Locations_Updated_ByToUsers                     Locations[]           @relation("Locations_Updated_ByToUsers")
-  Purchase_Order_Purchase_Order_Created_ByToUsers           Purchase_Order[]      @relation("Purchase_Order_Created_ByToUsers")
-  Purchase_Order_Purchase_Order_Updated_ByToUsers           Purchase_Order[]      @relation("Purchase_Order_Updated_ByToUsers")
-  Purchase_Order_Item_Purchase_Order_Item_Created_ByToUsers Purchase_Order_Item[] @relation("Purchase_Order_Item_Created_ByToUsers")
-  Purchase_Order_Item_Purchase_Order_Item_Updated_ByToUsers Purchase_Order_Item[] @relation("Purchase_Order_Item_Updated_ByToUsers")
-  Status_Status_Created_ByToUsers                           Status[]              @relation("Status_Created_ByToUsers")
-  Status_Status_Updated_ByToUsers                           Status[]              @relation("Status_Updated_ByToUsers")
-  Stock_Alerts_Stock_Alerts_Created_ByToUsers               Stock_Alerts[]        @relation("Stock_Alerts_Created_ByToUsers")
-  Stock_Alerts_Stock_Alerts_Updated_ByToUsers               Stock_Alerts[]        @relation("Stock_Alerts_Updated_ByToUsers")
-  Supplier_Contact_Supplier_Contact_Created_ByToUsers       Supplier_Contact[]    @relation("Supplier_Contact_Created_ByToUsers")
-  Supplier_Contact_Supplier_Contact_Updated_ByToUsers       Supplier_Contact[]    @relation("Supplier_Contact_Updated_ByToUsers")
-  Suppliers_Suppliers_Created_ByToUsers                     Suppliers[]           @relation("Suppliers_Created_ByToUsers")
-  Suppliers_Suppliers_Updated_ByToUsers                     Suppliers[]           @relation("Suppliers_Updated_ByToUsers")
-  Roles                                                     Roles                 @relation(fields: [Role_ID], references: [Role_ID], onDelete: NoAction, onUpdate: NoAction, map: "Foreign Key Role_ID")
+  User_ID          Int          @id(map: "User_pkey") @default(autoincrement())
+  First_Name       String       @db.VarChar(255)
+  Last_Name        String       @db.VarChar(255)
+  Email            String       @db.VarChar(255)
+  Role_ID          Int
+  Created_Datetime DateTime     @default(now()) @db.Timestamp(6)
+  Updated_Datetime DateTime?    @db.Timestamp(6)
+  Audit_Logs       Audit_Logs[]
+  Roles            Roles        @relation(fields: [Role_ID], references: [Role_ID], onDelete: NoAction, onUpdate: NoAction, map: "Foreign Key Role_ID")
 }
 
 model Categories {
@@ -71,133 +47,113 @@ model Categories {
 }
 
 model Contacts {
-  Contact_ID                       Int                @id(map: "Contact_pkey") @default(autoincrement())
-  First_Name                       String             @db.VarChar(225)
-  Last_Name                        String             @db.VarChar(225)
-  Email                            String             @db.VarChar(225)
-  Phone                            String?            @db.VarChar(50)
-  Created_Datetime                 DateTime           @default(now()) @db.Timestamp(6)
-  Updated_Datetime                 DateTime           @default(now()) @db.Timestamp(6)
-  Created_By                       Int?
-  Updated_By                       Int?
-  Users_Contacts_Created_ByToUsers Users?             @relation("Contacts_Created_ByToUsers", fields: [Created_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction, map: "Contact_Created_By_fkey")
-  Users_Contacts_Updated_ByToUsers Users?             @relation("Contacts_Updated_ByToUsers", fields: [Updated_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction, map: "Contact_Updated_By_fkey")
-  Supplier_Contact                 Supplier_Contact[]
+  Contact_ID       Int                @id(map: "Contact_pkey") @default(autoincrement())
+  First_Name       String             @db.VarChar(225)
+  Last_Name        String             @db.VarChar(225)
+  Email            String             @db.VarChar(225)
+  Phone            String?            @db.VarChar(50)
+  Created_Datetime DateTime           @default(now()) @db.Timestamp(6)
+  Updated_Datetime DateTime?          @db.Timestamp(6)
+  Location_Contact Location_Contact[]
+  Supplier_Contact Supplier_Contact[]
 }
 
 model Item_Location {
-  Item_Location_ID                      Int       @id @default(autoincrement())
-  Location_ID                           Int
-  Item_ID                               Int
-  Start_Date                            DateTime? @db.Date
-  End_Date                              DateTime? @db.Date
-  Created_Datetime                      DateTime  @default(now()) @db.Timestamp(6)
-  Updated_Datetime                      DateTime  @default(now()) @db.Timestamp(6)
-  Created_By                            Int?
-  Updated_By                            Int?
-  Users_Item_Location_Created_ByToUsers Users?    @relation("Item_Location_Created_ByToUsers", fields: [Created_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction)
-  Items                                 Items     @relation(fields: [Item_ID], references: [Item_ID], onDelete: NoAction, onUpdate: NoAction)
-  Locations                             Locations @relation(fields: [Location_ID], references: [Location_ID], onDelete: NoAction, onUpdate: NoAction)
-  Users_Item_Location_Updated_ByToUsers Users?    @relation("Item_Location_Updated_ByToUsers", fields: [Updated_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction)
+  Item_Location_ID Int       @id @default(autoincrement())
+  Location_ID      Int
+  Item_ID          Int
+  Start_Date       DateTime? @db.Date
+  End_Date         DateTime? @db.Date
+  Created_Datetime DateTime  @default(now()) @db.Timestamp(6)
+  Updated_Datetime DateTime? @db.Timestamp(6)
+  Items            Items     @relation(fields: [Item_ID], references: [Item_ID], onDelete: NoAction, onUpdate: NoAction)
+  Locations        Locations @relation(fields: [Location_ID], references: [Location_ID], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Items {
-  Item_ID                       Int                   @id(map: "Item_pkey") @default(autoincrement())
-  Name                          String                @db.VarChar(255)
-  SKU                           String                @db.VarChar(50)
-  Description                   String?               @db.VarChar(255)
-  Is_Active                     Boolean               @default(true)
-  Created_Datetime              DateTime              @default(now()) @db.Timestamp(6)
-  Updated_Datetime              DateTime              @default(now()) @db.Timestamp(6)
-  Created_By                    Int?
-  Updated_By                    Int?
-  Barcode                       String?               @db.VarChar(255)
-  Quantity                      Int?
-  Category_ID                   Int
-  Supplier_ID                   Int?
-  Item_Location                 Item_Location[]
-  Users_Items_Created_ByToUsers Users?                @relation("Items_Created_ByToUsers", fields: [Created_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction, map: "Created_By_fkey")
-  Categories                    Categories            @relation(fields: [Category_ID], references: [Category_ID], onDelete: NoAction, onUpdate: NoAction)
-  Suppliers                     Suppliers?            @relation(fields: [Supplier_ID], references: [Supplier_ID], onDelete: NoAction, onUpdate: NoAction)
-  Users_Items_Updated_ByToUsers Users?                @relation("Items_Updated_ByToUsers", fields: [Updated_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction, map: "Updated_By_fkey")
-  Purchase_Order_Item           Purchase_Order_Item[]
-  Stock_Alerts                  Stock_Alerts[]
+  Item_ID             Int                   @id(map: "Item_pkey") @default(autoincrement())
+  Name                String                @db.VarChar(255)
+  SKU                 String                @db.VarChar(50)
+  Description         String?               @db.VarChar(255)
+  Is_Active           Boolean               @default(true)
+  Created_Datetime    DateTime              @default(now()) @db.Timestamp(6)
+  Updated_Datetime    DateTime?             @db.Timestamp(6)
+  Barcode             String?               @db.VarChar(255)
+  Quantity            Int?
+  Category_ID         Int
+  Supplier_ID         Int?
+  Item_Location       Item_Location[]
+  Categories          Categories            @relation(fields: [Category_ID], references: [Category_ID], onDelete: NoAction, onUpdate: NoAction)
+  Suppliers           Suppliers?            @relation(fields: [Supplier_ID], references: [Supplier_ID], onDelete: NoAction, onUpdate: NoAction)
+  Purchase_Order_Item Purchase_Order_Item[]
+  Stock_Alerts        Stock_Alerts[]
 }
 
 model Locations {
-  Location_ID                       Int             @id(map: "Location_pkey") @default(autoincrement())
-  Description                       String          @db.VarChar(255)
-  Is_Active                         Boolean         @default(true)
-  Created_Datetime                  DateTime        @default(now()) @db.Timestamp(6)
-  Updated_Datetime                  DateTime        @default(now()) @db.Timestamp(6)
-  Created_By                        Int?
-  Updated_By                        Int?
-  Item_Location                     Item_Location[]
-  Users_Locations_Created_ByToUsers Users?          @relation("Locations_Created_ByToUsers", fields: [Created_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction, map: "Created_By_fk")
-  Users_Locations_Updated_ByToUsers Users?          @relation("Locations_Updated_ByToUsers", fields: [Updated_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction, map: "Updated_By_fk")
+  Location_ID      Int                @id(map: "Location_pkey") @default(autoincrement())
+  Description      String             @db.VarChar(255)
+  Is_Active        Boolean            @default(true)
+  Created_Datetime DateTime           @default(now()) @db.Timestamp(6)
+  Updated_Datetime DateTime           @default(now()) @db.Timestamp(6)
+  Max_Capacity     Int                @default(0)
+  Min_Capacity     Int                @default(0)
+  Street           String             @db.VarChar(225)
+  City             String             @db.VarChar(225)
+  State            String             @db.VarChar(225)
+  Country          String             @db.VarChar(225)
+  Zip_Code         Int
+  Location_Type_ID Int
+  Item_Location    Item_Location[]
+  Location_Contact Location_Contact[]
+  Location_Type    Location_Type      @relation(fields: [Location_Type_ID], references: [Location_Type_ID], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Purchase_Order {
-  Purchase_Order_ID                      Int                   @id @default(autoincrement())
-  Supplier_ID                            Int
-  Status_ID                              Int
-  Created_Datetime                       DateTime              @default(now()) @db.Timestamp(6)
-  Updated_Datetime                       DateTime              @default(now()) @db.Timestamp(6)
-  Created_By                             Int?
-  Updated_By                             Int?
-  Users_Purchase_Order_Created_ByToUsers Users?                @relation("Purchase_Order_Created_ByToUsers", fields: [Created_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction)
-  Status                                 Status                @relation(fields: [Status_ID], references: [Status_ID], onDelete: NoAction, onUpdate: NoAction)
-  Suppliers                              Suppliers             @relation(fields: [Supplier_ID], references: [Supplier_ID], onDelete: NoAction, onUpdate: NoAction)
-  Users_Purchase_Order_Updated_ByToUsers Users?                @relation("Purchase_Order_Updated_ByToUsers", fields: [Updated_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction)
-  Purchase_Order_Item                    Purchase_Order_Item[]
+  Purchase_Order_ID   Int                   @id @default(autoincrement())
+  Supplier_ID         Int
+  Status_ID           Int
+  Created_Datetime    DateTime              @default(now()) @db.Timestamp(6)
+  Updated_Datetime    DateTime?             @db.Timestamp(6)
+  Status              Status                @relation(fields: [Status_ID], references: [Status_ID], onDelete: NoAction, onUpdate: NoAction)
+  Suppliers           Suppliers             @relation(fields: [Supplier_ID], references: [Supplier_ID], onDelete: NoAction, onUpdate: NoAction)
+  Purchase_Order_Item Purchase_Order_Item[]
 }
 
 model Purchase_Order_Item {
-  Purchase_Order_Item_ID                      Int            @id @default(autoincrement())
-  Purchase_Order_ID                           Int
-  Item_ID                                     Int
-  Purchase_Price                              Decimal        @default(0) @db.Decimal(11, 2)
-  Created_Datetime                            DateTime       @default(now()) @db.Timestamp(6)
-  Updated_Datetime                            DateTime       @default(now()) @db.Timestamp(6)
-  Created_By                                  Int?
-  Updated_By                                  Int?
-  Users_Purchase_Order_Item_Created_ByToUsers Users?         @relation("Purchase_Order_Item_Created_ByToUsers", fields: [Created_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction)
-  Items                                       Items          @relation(fields: [Item_ID], references: [Item_ID], onDelete: NoAction, onUpdate: NoAction)
-  Purchase_Order                              Purchase_Order @relation(fields: [Purchase_Order_ID], references: [Purchase_Order_ID], onDelete: NoAction, onUpdate: NoAction)
-  Users_Purchase_Order_Item_Updated_ByToUsers Users?         @relation("Purchase_Order_Item_Updated_ByToUsers", fields: [Updated_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction)
+  Purchase_Order_Item_ID Int            @id @default(autoincrement())
+  Purchase_Order_ID      Int
+  Item_ID                Int
+  Purchase_Price         Decimal        @default(0) @db.Decimal(11, 2)
+  Created_Datetime       DateTime       @default(now()) @db.Timestamp(6)
+  Updated_Datetime       DateTime?      @db.Timestamp(6)
+  Items                  Items          @relation(fields: [Item_ID], references: [Item_ID], onDelete: NoAction, onUpdate: NoAction)
+  Purchase_Order         Purchase_Order @relation(fields: [Purchase_Order_ID], references: [Purchase_Order_ID], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Supplier_Contact {
-  Supplier_Contact_ID                      Int       @id @default(autoincrement())
-  Supplier_ID                              Int
-  Contact_ID                               Int
-  Is_Active                                Boolean   @default(true)
-  Created_Datetime                         DateTime  @default(now()) @db.Timestamp(6)
-  Updated_Datetime                         DateTime  @default(now()) @db.Timestamp(6)
-  Created_By                               Int?
-  Updated_By                               Int?
-  Contacts                                 Contacts  @relation(fields: [Contact_ID], references: [Contact_ID], onDelete: NoAction, onUpdate: NoAction)
-  Users_Supplier_Contact_Created_ByToUsers Users?    @relation("Supplier_Contact_Created_ByToUsers", fields: [Created_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction)
-  Suppliers                                Suppliers @relation(fields: [Supplier_ID], references: [Supplier_ID], onDelete: NoAction, onUpdate: NoAction)
-  Users_Supplier_Contact_Updated_ByToUsers Users?    @relation("Supplier_Contact_Updated_ByToUsers", fields: [Updated_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction)
+  Supplier_Contact_ID Int       @id @default(autoincrement())
+  Supplier_ID         Int
+  Contact_ID          Int
+  Is_Active           Boolean   @default(true)
+  Created_Datetime    DateTime  @default(now()) @db.Timestamp(6)
+  Updated_Datetime    DateTime? @db.Timestamp(6)
+  Contacts            Contacts  @relation(fields: [Contact_ID], references: [Contact_ID], onDelete: NoAction, onUpdate: NoAction)
+  Suppliers           Suppliers @relation(fields: [Supplier_ID], references: [Supplier_ID], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Suppliers {
-  Supplier_ID                       Int                @id @default(autoincrement())
-  Name                              String             @db.VarChar(225)
-  Street                            String             @db.VarChar(225)
-  City                              String             @db.VarChar(225)
-  State                             String             @db.VarChar(2)
-  Country                           String             @db.VarChar(50)
-  Created_Datetime                  DateTime           @default(now()) @db.Timestamp(6)
-  Updated_Datetime                  DateTime           @default(now()) @db.Timestamp(6)
-  Created_By                        Int?
-  Updated_By                        Int?
-  Items                             Items[]
-  Purchase_Order                    Purchase_Order[]
-  Supplier_Contact                  Supplier_Contact[]
-  Users_Suppliers_Created_ByToUsers Users?             @relation("Suppliers_Created_ByToUsers", fields: [Created_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction)
-  Users_Suppliers_Updated_ByToUsers Users?             @relation("Suppliers_Updated_ByToUsers", fields: [Updated_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction)
+  Supplier_ID      Int                @id @default(autoincrement())
+  Name             String             @db.VarChar(225)
+  Street           String             @db.VarChar(225)
+  City             String             @db.VarChar(225)
+  State            String             @db.VarChar(225)
+  Country          String             @db.VarChar(225)
+  Created_Datetime DateTime           @default(now()) @db.Timestamp(6)
+  Updated_Datetime DateTime?          @db.Timestamp(6)
+  Zip_Code         Int
+  Items            Items[]
+  Purchase_Order   Purchase_Order[]
+  Supplier_Contact Supplier_Contact[]
 }
 
 model Audit_Actions {
@@ -232,15 +188,29 @@ model Audit_Type {
 }
 
 model Stock_Alerts {
-  Stock_Alerts_ID                      Int      @id @default(autoincrement())
-  Item_ID                              Int
-  Threshold                            Int
-  Is_Active                            Boolean  @default(false)
-  Created_Datetime                     DateTime @default(now()) @db.Timestamp(6)
-  Updated_Datetime                     DateTime @default(now()) @db.Timestamp(6)
-  Created_By                           Int?
-  Updated_By                           Int?
-  Users_Stock_Alerts_Created_ByToUsers Users?   @relation("Stock_Alerts_Created_ByToUsers", fields: [Created_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction)
-  Items                                Items    @relation(fields: [Item_ID], references: [Item_ID], onDelete: NoAction, onUpdate: NoAction)
-  Users_Stock_Alerts_Updated_ByToUsers Users?   @relation("Stock_Alerts_Updated_ByToUsers", fields: [Updated_By], references: [User_ID], onDelete: NoAction, onUpdate: NoAction)
+  Stock_Alerts_ID  Int       @id @default(autoincrement())
+  Item_ID          Int
+  Threshold        Int
+  Is_Active        Boolean   @default(false)
+  Created_Datetime DateTime  @default(now()) @db.Timestamp(6)
+  Updated_Datetime DateTime? @db.Timestamp(6)
+  Items            Items     @relation(fields: [Item_ID], references: [Item_ID], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Location_Contact {
+  Location_Contact_ID Int        @id @default(autoincrement())
+  Location_ID         Int?
+  Contact_ID          Int?
+  Created_Datetime    DateTime   @default(now()) @db.Timestamp(6)
+  Updated_Datetime    DateTime?  @db.Timestamp(6)
+  Contacts            Contacts?  @relation(fields: [Contact_ID], references: [Contact_ID], onDelete: NoAction, onUpdate: NoAction)
+  Locations           Locations? @relation(fields: [Location_ID], references: [Location_ID], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Location_Type {
+  Location_Type_ID Int         @id @default(autoincrement())
+  Description      String      @db.VarChar(225)
+  Created_Datetime DateTime    @default(now()) @db.Timestamp(6)
+  Updated_Datetime DateTime?   @db.Timestamp(6)
+  Locations        Locations[]
 }

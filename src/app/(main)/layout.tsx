@@ -8,9 +8,6 @@ import { Geist, Geist_Mono } from "next/font/google"
 
 export const dynamic = "force-dynamic";
 
-const _geist = Geist({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
-
 export const metadata: Metadata = {
   title: "Inventory Management App (IMA)",
   description: "Modern inventory management application",
