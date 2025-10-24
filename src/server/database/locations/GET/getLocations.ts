@@ -26,6 +26,18 @@ export type LocationsPromise = (Prisma.LocationsGetPayload<{
         Description: true;
       };
     };
+    Location_Contact: {
+      select: {
+        Contacts: {
+          select: {
+            First_Name: true;
+            Last_Name: true;
+            Email: true;
+            Phone: true;
+          };
+        };
+      };
+    };
     Items: true;
     _count: { 
       select: { 
@@ -41,19 +53,16 @@ export type LocationsPromise = (Prisma.LocationsGetPayload<{
 export async function getLocations() {
   noStore();
 
-  // Step 1: Get all stock sums grouped by Location_ID
   const stockPerLocation = await db.items.groupBy({
     by: ["Location_ID"],
     _sum: { Quantity: true },
   });
 
-  // Convert to a Map for fast lookup
   const stockMap = new Map<number, number>();
   stockPerLocation.forEach((stock) => {
     stockMap.set(stock.Location_ID, stock._sum.Quantity ?? 0);
   });
 
-  // Step 2: Fetch all locations
   const locations = await db.locations.findMany({
     select: {
       Location_ID: true,
@@ -79,10 +88,28 @@ export async function getLocations() {
           Description: true,
         },
       },
+      Location_Contact: {
+        orderBy: {
+          Created_Datetime: 'desc'
+        },
+        where: {
+          Is_Active: true
+        },
+        select: {
+          Contacts: {
+            select: {
+              First_Name: true,
+              Last_Name: true,
+              Email: true,
+              Phone: true
+            }
+          }
+        },
+        take: 1
+      }
     },
   });
 
-  // Step 3: Add currentStock to each location
   const locationsWithStock = locations.map((location) => ({
     ...location,
     currentStock: stockMap.get(location.Location_ID) ?? 0,

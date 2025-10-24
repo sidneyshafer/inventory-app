@@ -26,8 +26,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { LocationsPromise } from "@/server/database/locations/getLocations"
-import { getLocationStats } from "@/server/database/locations/getLocationStats"
+import { LocationsPromise } from "@/server/database/locations/GET/getLocations"
+import { getLocationStats } from "@/server/database/locations/GET/getLocationStats"
 
 interface LocationsDashboardProps {
     locations: LocationsPromise[]
@@ -65,6 +65,14 @@ export default function LocationsDashboard({
     return `${parts.join(", ")} ${location.Zip_Code ?? ""}`.trim();
   }
 
+  const formatName = (location: typeof locations[0]) => {
+    const contact = location.Location_Contact?.[0]?.Contacts;
+    if (!contact) return "";
+
+    const parts = [contact.First_Name, contact.Last_Name].filter(Boolean);
+    return parts.join(" ");
+  };
+
   return (
     <div className="flex flex-col gap-6 py-6">
       <div className="flex items-center justify-between">
@@ -98,7 +106,7 @@ export default function LocationsDashboard({
           <CardHeader className="pb-3">
             <CardDescription>Total Capacity</CardDescription>
             <CardTitle className="text-3xl">
-              {stats.totalCapacity}
+              {(stats.totalCapacity / 1000).toFixed(1)}K
             </CardTitle>
           </CardHeader>
         </Card>
@@ -106,7 +114,7 @@ export default function LocationsDashboard({
           <CardHeader className="pb-3">
             <CardDescription>Current Stock</CardDescription>
             <CardTitle className="text-3xl">
-              {stats.currentStock}
+              {(stats.currentStock / 1000).toFixed(1)}K
             </CardTitle>
           </CardHeader>
         </Card>
@@ -166,9 +174,8 @@ export default function LocationsDashboard({
                     {getStatusBadge(location.Is_Active)}
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Manager</span>
-                    {/* come back: location contact */}
-                    <span className="font-medium">{""}</span>
+                    <span className="text-muted-foreground">Contact</span>
+                    <span className="font-medium">{formatName(location)}</span>
                   </div>
                 </div>
 
