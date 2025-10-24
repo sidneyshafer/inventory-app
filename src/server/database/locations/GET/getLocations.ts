@@ -3,7 +3,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import type { Prisma } from "@prisma/client";
 import { db } from "@/server/db";
 
-export type LocationsPromise = (Prisma.LocationsGetPayload<{
+export type LocationsPromise = Prisma.LocationsGetPayload<{
   select: {
     Location_ID: true;
     Description: true;
@@ -48,7 +48,7 @@ export type LocationsPromise = (Prisma.LocationsGetPayload<{
 }> & { 
   currentStock: number; 
   totalItems: number; 
-});
+};
 
 export async function getLocations() {
   noStore();

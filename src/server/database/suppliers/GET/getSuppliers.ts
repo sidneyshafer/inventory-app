@@ -3,7 +3,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import type { Prisma } from "@prisma/client";
 import { db } from "@/server/db";
 
-export type SuppliersPromise = (Prisma.SuppliersGetPayload<{
+export type SuppliersPromise = Prisma.SuppliersGetPayload<{
   select: {
     Supplier_ID: true;
     Name: true;
@@ -17,6 +17,11 @@ export type SuppliersPromise = (Prisma.SuppliersGetPayload<{
       select: {
         Name: true;
         Abbreviation: true;
+      };
+    };
+    Supplier_Type: {
+      select: {
+        Description: true;
       };
     };
     Supplier_Contact: {
@@ -36,7 +41,7 @@ export type SuppliersPromise = (Prisma.SuppliersGetPayload<{
   totalOrders: number;
   activeOrders: number;
   totalValue: number;
-});
+};
 
 export async function getSuppliers() {
   noStore();
@@ -72,6 +77,11 @@ export async function getSuppliers() {
           Name: true,
           Abbreviation: true,
         },
+      },
+      Supplier_Type: {
+        select: {
+          Description: true
+        }
       },
       Supplier_Contact: {
         orderBy: {

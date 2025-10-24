@@ -16,15 +16,6 @@ model Roles {
   Users            Users[]
 }
 
-model Status {
-  Status_ID        Int              @id @default(autoincrement())
-  Description      String           @db.VarChar(50)
-  Created_Datetime DateTime         @default(now()) @db.Timestamp(6)
-  Updated_Datetime DateTime?        @db.Timestamp(6)
-  Is_Active        Boolean          @default(true)
-  Purchase_Order   Purchase_Order[]
-}
-
 model Users {
   User_ID          Int          @id(map: "User_pkey") @default(autoincrement())
   First_Name       String       @db.VarChar(50)
@@ -67,13 +58,15 @@ model Items {
   Is_Active           Boolean               @default(true)
   Created_Datetime    DateTime              @default(now()) @db.Timestamp(6)
   Updated_Datetime    DateTime?             @db.Timestamp(6)
-  Barcode             String?               @db.VarChar(20)
   Quantity            Int?
   Category_ID         Int
   Supplier_ID         Int
   Location_ID         Int
+  Unit_Price          Decimal               @default(0) @db.Decimal(11, 2)
+  Status_ID           Int
   Categories          Categories            @relation(fields: [Category_ID], references: [Category_ID], onDelete: NoAction, onUpdate: NoAction)
   Locations           Locations             @relation(fields: [Location_ID], references: [Location_ID], onDelete: NoAction, onUpdate: NoAction)
+  Item_Status         Item_Status           @relation(fields: [Status_ID], references: [Item_Status_ID], onDelete: NoAction, onUpdate: NoAction)
   Suppliers           Suppliers             @relation(fields: [Supplier_ID], references: [Supplier_ID], onDelete: NoAction, onUpdate: NoAction)
   Purchase_Order_Item Purchase_Order_Item[]
   Stock_Alerts        Stock_Alerts[]
@@ -99,17 +92,19 @@ model Locations {
 }
 
 model Purchase_Order {
-  Purchase_Order_ID   Int                   @id @default(autoincrement())
-  Supplier_ID         Int
-  Status_ID           Int
-  Created_Datetime    DateTime              @default(now()) @db.Timestamp(6)
-  Updated_Datetime    DateTime?             @db.Timestamp(6)
-  Is_Active           Boolean               @default(true)
-  Order_Date_Made     DateTime?             @db.Date
-  Order_Date_Recieved DateTime?             @db.Date
-  Status              Status                @relation(fields: [Status_ID], references: [Status_ID], onDelete: NoAction, onUpdate: NoAction)
-  Suppliers           Suppliers             @relation(fields: [Supplier_ID], references: [Supplier_ID], onDelete: NoAction, onUpdate: NoAction)
-  Purchase_Order_Item Purchase_Order_Item[]
+  Purchase_Order_ID       Int                     @id @default(autoincrement())
+  Supplier_ID             Int
+  Status_ID               Int
+  Created_Datetime        DateTime                @default(now()) @db.Timestamp(6)
+  Updated_Datetime        DateTime?               @db.Timestamp(6)
+  Is_Active               Boolean                 @default(true)
+  Order_Date_Made         DateTime?               @db.Date
+  Order_Date_Recieved     DateTime?               @db.Date
+  Priority_ID             Int
+  Purchase_Order_Priority Purchase_Order_Priority @relation(fields: [Priority_ID], references: [Purchase_Order_Priority_ID], onDelete: NoAction, onUpdate: NoAction)
+  Status                  Purchase_Order_Status   @relation(fields: [Status_ID], references: [Purchase_Order_Status_ID], onDelete: NoAction, onUpdate: NoAction)
+  Suppliers               Suppliers               @relation(fields: [Supplier_ID], references: [Supplier_ID], onDelete: NoAction, onUpdate: NoAction)
+  Purchase_Order_Item     Purchase_Order_Item[]
 }
 
 model Purchase_Order_Item {
@@ -144,9 +139,11 @@ model Suppliers {
   Zip_Code         Int
   US_State_ID      Int
   Is_Active        Boolean            @default(true)
+  Supplier_Type_ID Int
   Items            Items[]
   Purchase_Order   Purchase_Order[]
   Supplier_Contact Supplier_Contact[]
+  Supplier_Type    Supplier_Type      @relation(fields: [Supplier_Type_ID], references: [Supplier_Type_ID], onDelete: NoAction, onUpdate: NoAction)
   US_States        US_States          @relation(fields: [US_State_ID], references: [US_State_ID], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -207,6 +204,7 @@ model Location_Type {
   Description      String      @db.VarChar(50)
   Created_Datetime DateTime    @default(now()) @db.Timestamp(6)
   Updated_Datetime DateTime?   @db.Timestamp(6)
+  Is_Active        Boolean     @default(true)
   Locations        Locations[]
 }
 
@@ -220,4 +218,40 @@ model US_States {
   Updated_Datetime DateTime?   @db.Timestamp(6)
   Locations        Locations[]
   Suppliers        Suppliers[]
+}
+
+model Supplier_Type {
+  Supplier_Type_ID Int         @id @default(autoincrement())
+  Description      String      @db.VarChar(50)
+  Created_Datetime DateTime    @default(now()) @db.Timestamp(6)
+  Updated_Datetime DateTime?   @db.Timestamp(6)
+  Is_Active        Boolean     @default(true)
+  Suppliers        Suppliers[]
+}
+
+model Item_Status {
+  Item_Status_ID   Int       @id @default(autoincrement())
+  Description      String    @db.VarChar(50)
+  Is_Active        Boolean   @default(true)
+  Created_Datetime DateTime  @default(now()) @db.Timestamp(6)
+  Updated_Datetime DateTime? @db.Timestamp(6)
+  Items            Items[]
+}
+
+model Purchase_Order_Priority {
+  Purchase_Order_Priority_ID Int              @id @default(autoincrement())
+  Description                String           @db.VarChar(50)
+  Is_Active                  Boolean          @default(true)
+  Created_Datetime           DateTime         @default(now()) @db.Timestamp(6)
+  Updated_Datetime           DateTime?        @db.Timestamp(6)
+  Purchase_Order             Purchase_Order[]
+}
+
+model Purchase_Order_Status {
+  Purchase_Order_Status_ID Int              @id(map: "Status_pkey") @default(autoincrement())
+  Description              String           @db.VarChar(50)
+  Created_Datetime         DateTime         @default(now()) @db.Timestamp(6)
+  Updated_Datetime         DateTime?        @db.Timestamp(6)
+  Is_Active                Boolean          @default(true)
+  Purchase_Order           Purchase_Order[]
 }

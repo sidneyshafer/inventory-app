@@ -134,7 +134,7 @@ export default function LocationsDashboard({
                     </div>
                     <div>
                       <CardTitle className="text-lg">{location.Description}</CardTitle>
-                      <CardDescription className="text-xs">{location.Location_ID}</CardDescription>
+                      <CardDescription className="text-xs">LOC-0{location.Location_ID}</CardDescription>
                     </div>
                   </div>
                   <DropdownMenu>

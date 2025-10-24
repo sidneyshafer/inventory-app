@@ -138,7 +138,7 @@ export default function SuppliersDashboard({
                   </Avatar>
                   <div>
                     <CardTitle className="text-lg">{supplier.Name}</CardTitle>
-                    <CardDescription className="text-xs">{supplier.Supplier_ID}</CardDescription>
+                    <CardDescription className="text-xs">SUP-0{supplier.Supplier_ID}</CardDescription>
                   </div>
                 </div>
                 <DropdownMenu>
@@ -169,7 +169,7 @@ export default function SuppliersDashboard({
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
-                {/* <Badge variant="outline">{supplier.category}</Badge> */}
+                <Badge variant="outline">{supplier.Supplier_Type.Description}</Badge>
                 {getStatusBadge(supplier.Is_Active)}
               </div>
 
@@ -184,16 +184,16 @@ export default function SuppliersDashboard({
                 <div className="flex items-center gap-2 text-sm">
                   <Mail className="h-4 w-4 text-muted-foreground" />
                   <a 
-                    href={`mailto:${supplier.Supplier_Contact[0].Contacts.Email}`} 
+                    href={`mailto:${supplier.Supplier_Contact[0]?.Contacts.Email}`} 
                     className="text-primary hover:underline"
                     >
-                        {supplier.Supplier_Contact[0].Contacts.Email}
+                        {supplier.Supplier_Contact[0]?.Contacts.Email}
                   </a>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Phone className="h-4 w-4 text-muted-foreground" />
                   <span>
-                    {supplier.Supplier_Contact[0].Contacts.Phone}
+                    {supplier.Supplier_Contact[0]?.Contacts.Phone}
                   </span>
                 </div>
                 <div className="flex items-start gap-2 text-sm">
