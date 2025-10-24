@@ -3,7 +3,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import type { Prisma } from "@prisma/client";
 import { db } from "@/server/db";
 
-export type LocationsPromise = Prisma.LocationsGetPayload<{
+export type LocationsPromise = (Prisma.LocationsGetPayload<{
   select: {
     Location_ID: true;
     Description: true;
@@ -14,44 +14,80 @@ export type LocationsPromise = Prisma.LocationsGetPayload<{
     Min_Capacity: true;
     Street: true;
     City: true;
-    State: true;
-    Country: true;
     Zip_Code: true;
+    US_States: {
+      select: {
+        Name: true;
+        Abbreviation: true;
+      };
+    };
     Location_Type: {
       select: {
         Description: true;
       };
     };
+    Items: true;
+    _count: { 
+      select: { 
+        Items: true; 
+      };
+    };
   };
-}>;
+}> & { 
+  currentStock: number; 
+  totalItems: number; 
+});
 
 export async function getLocations() {
-    noStore()
-    
-    const locations = await db.locations.findMany({
-        orderBy: {
-            Description: "asc"
-        },
-        select: {
-            Location_ID: true,
-            Description: true,
-            Is_Active: true,
-            Created_Datetime: true,
-            Updated_Datetime: true,
-            Max_Capacity: true,
-            Min_Capacity: true,
-            Street: true,
-            City: true,
-            State: true,
-            Country: true,
-            Zip_Code: true,
-            Location_Type: {
-                select: {
-                    Description: true
-                }
-            }
-        }
-    });
+  noStore();
 
-    return locations;
+  // Step 1: Get all stock sums grouped by Location_ID
+  const stockPerLocation = await db.items.groupBy({
+    by: ["Location_ID"],
+    _sum: { Quantity: true },
+  });
+
+  // Convert to a Map for fast lookup
+  const stockMap = new Map<number, number>();
+  stockPerLocation.forEach((stock) => {
+    stockMap.set(stock.Location_ID, stock._sum.Quantity ?? 0);
+  });
+
+  // Step 2: Fetch all locations
+  const locations = await db.locations.findMany({
+    select: {
+      Location_ID: true,
+      Description: true,
+      Is_Active: true,
+      Created_Datetime: true,
+      Updated_Datetime: true,
+      Max_Capacity: true,
+      Min_Capacity: true,
+      Street: true,
+      City: true,
+      Zip_Code: true,
+      US_States: {
+        select: {
+          Name: true,
+          Abbreviation: true,
+        },
+      },
+      Items: true,
+      _count: { select: { Items: true } },
+      Location_Type: {
+        select: {
+          Description: true,
+        },
+      },
+    },
+  });
+
+  // Step 3: Add currentStock to each location
+  const locationsWithStock = locations.map((location) => ({
+    ...location,
+    currentStock: stockMap.get(location.Location_ID) ?? 0,
+    totalItems: location._count.Items ?? 0
+  }));
+
+  return locationsWithStock;
 }

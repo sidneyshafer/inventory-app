@@ -60,6 +60,11 @@ export default function LocationsDashboard({
     }
   }
 
+  const formatAddress = (location: typeof locations[0]) => {
+    const parts = [location.Street, location.City, location.US_States?.Name].filter(Boolean);
+    return `${parts.join(", ")} ${location.Zip_Code ?? ""}`.trim();
+  }
+
   return (
     <div className="flex flex-col gap-6 py-6">
       <div className="flex items-center justify-between">
@@ -110,8 +115,7 @@ export default function LocationsDashboard({
       {/* Locations Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {locations.map((location) => {
-            // come back: location.currentStock - not min_capacity
-          const capacityPercentage = getCapacityPercentage(location.Min_Capacity, location.Max_Capacity)
+          const capacityPercentage = getCapacityPercentage(location.currentStock, location.Max_Capacity)
           return (
             <Card key={location.Location_ID} className="relative overflow-hidden">
               <CardHeader>
@@ -178,18 +182,15 @@ export default function LocationsDashboard({
                   <Progress value={capacityPercentage} className="h-2" />
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <span>
-                        {/* come back: location.currentStock - not min_capacity */}
-                      {location.Min_Capacity.toLocaleString()} / {location.Max_Capacity.toLocaleString()} units
+                      {location.currentStock.toLocaleString()} / {location.Max_Capacity.toLocaleString()} units
                     </span>
-                    {/* item count */}
-                    <span>{""} items</span>
+                    <span>{location.totalItems} items</span>
                   </div>
                 </div>
 
                 <div className="pt-2 text-xs text-muted-foreground">
                   <MapPin className="mr-1 inline h-3 w-3" />
-                  {/* address */}
-                  {location.State}
+                  {formatAddress(location)}
                 </div>
               </CardContent>
             </Card>

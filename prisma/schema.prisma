@@ -10,7 +10,7 @@ datasource db {
 
 model Roles {
   Role_ID          Int       @id @default(autoincrement())
-  Description      String    @db.VarChar(255)
+  Description      String    @db.VarChar(50)
   Created_Datetime DateTime  @default(now()) @db.Timestamp(6)
   Updated_Datetime DateTime? @db.Timestamp(6)
   Users            Users[]
@@ -18,7 +18,7 @@ model Roles {
 
 model Status {
   Status_ID        Int              @id @default(autoincrement())
-  Description      String           @db.VarChar(255)
+  Description      String           @db.VarChar(50)
   Created_Datetime DateTime         @default(now()) @db.Timestamp(6)
   Updated_Datetime DateTime?        @db.Timestamp(6)
   Is_Active        Boolean          @default(true)
@@ -27,9 +27,9 @@ model Status {
 
 model Users {
   User_ID          Int          @id(map: "User_pkey") @default(autoincrement())
-  First_Name       String       @db.VarChar(255)
-  Last_Name        String       @db.VarChar(255)
-  Email            String       @db.VarChar(255)
+  First_Name       String       @db.VarChar(50)
+  Last_Name        String       @db.VarChar(50)
+  Email            String       @db.VarChar(50)
   Role_ID          Int
   Created_Datetime DateTime     @default(now()) @db.Timestamp(6)
   Updated_Datetime DateTime?    @db.Timestamp(6)
@@ -39,7 +39,7 @@ model Users {
 
 model Categories {
   Category_ID      Int       @id(map: "Category_pkey") @default(autoincrement())
-  Description      String    @db.VarChar(225)
+  Description      String    @db.VarChar(50)
   Is_Active        Boolean   @default(true)
   Created_Datetime DateTime  @default(now()) @db.Timestamptz(6)
   Updated_Datetime DateTime? @db.Timestamp(6)
@@ -48,64 +48,53 @@ model Categories {
 
 model Contacts {
   Contact_ID       Int                @id(map: "Contact_pkey") @default(autoincrement())
-  First_Name       String             @db.VarChar(225)
-  Last_Name        String             @db.VarChar(225)
-  Email            String             @db.VarChar(225)
-  Phone            String?            @db.VarChar(50)
+  First_Name       String             @db.VarChar(50)
+  Last_Name        String             @db.VarChar(50)
+  Email            String             @db.VarChar(50)
+  Phone            String?            @db.VarChar(20)
   Created_Datetime DateTime           @default(now()) @db.Timestamp(6)
   Updated_Datetime DateTime?          @db.Timestamp(6)
   Location_Contact Location_Contact[]
   Supplier_Contact Supplier_Contact[]
 }
 
-model Item_Location {
-  Item_Location_ID Int       @id @default(autoincrement())
-  Location_ID      Int
-  Item_ID          Int
-  Start_Date       DateTime? @db.Date
-  End_Date         DateTime? @db.Date
-  Created_Datetime DateTime  @default(now()) @db.Timestamp(6)
-  Updated_Datetime DateTime? @db.Timestamp(6)
-  Items            Items     @relation(fields: [Item_ID], references: [Item_ID], onDelete: NoAction, onUpdate: NoAction)
-  Locations        Locations @relation(fields: [Location_ID], references: [Location_ID], onDelete: NoAction, onUpdate: NoAction)
-}
-
 model Items {
   Item_ID             Int                   @id(map: "Item_pkey") @default(autoincrement())
-  Name                String                @db.VarChar(255)
-  SKU                 String                @db.VarChar(50)
-  Description         String?               @db.VarChar(255)
+  Name                String                @db.VarChar(50)
+  SKU                 String                @db.VarChar(20)
+  Description         String?               @db.VarChar(100)
   Is_Active           Boolean               @default(true)
   Created_Datetime    DateTime              @default(now()) @db.Timestamp(6)
   Updated_Datetime    DateTime?             @db.Timestamp(6)
-  Barcode             String?               @db.VarChar(255)
+  Barcode             String?               @db.VarChar(20)
   Quantity            Int?
   Category_ID         Int
-  Supplier_ID         Int?
-  Item_Location       Item_Location[]
+  Supplier_ID         Int
+  Location_ID         Int
   Categories          Categories            @relation(fields: [Category_ID], references: [Category_ID], onDelete: NoAction, onUpdate: NoAction)
-  Suppliers           Suppliers?            @relation(fields: [Supplier_ID], references: [Supplier_ID], onDelete: NoAction, onUpdate: NoAction)
+  Locations           Locations             @relation(fields: [Location_ID], references: [Location_ID], onDelete: NoAction, onUpdate: NoAction)
+  Suppliers           Suppliers             @relation(fields: [Supplier_ID], references: [Supplier_ID], onDelete: NoAction, onUpdate: NoAction)
   Purchase_Order_Item Purchase_Order_Item[]
   Stock_Alerts        Stock_Alerts[]
 }
 
 model Locations {
   Location_ID      Int                @id(map: "Location_pkey") @default(autoincrement())
-  Description      String             @db.VarChar(255)
+  Description      String             @db.VarChar(100)
   Is_Active        Boolean            @default(true)
   Created_Datetime DateTime           @default(now()) @db.Timestamp(6)
-  Updated_Datetime DateTime           @default(now()) @db.Timestamp(6)
+  Updated_Datetime DateTime?          @db.Timestamp(6)
   Max_Capacity     Int                @default(0)
   Min_Capacity     Int                @default(0)
-  Street           String             @db.VarChar(225)
-  City             String             @db.VarChar(225)
-  State            String             @db.VarChar(225)
-  Country          String             @db.VarChar(225)
+  City             String             @db.VarChar(20)
+  Street           String             @db.VarChar(50)
   Zip_Code         Int
   Location_Type_ID Int
-  Item_Location    Item_Location[]
+  US_State_ID      Int
+  Items            Items[]
   Location_Contact Location_Contact[]
   Location_Type    Location_Type      @relation(fields: [Location_Type_ID], references: [Location_Type_ID], onDelete: NoAction, onUpdate: NoAction)
+  US_States        US_States          @relation(fields: [US_State_ID], references: [US_State_ID], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Purchase_Order {
@@ -143,22 +132,22 @@ model Supplier_Contact {
 
 model Suppliers {
   Supplier_ID      Int                @id @default(autoincrement())
-  Name             String             @db.VarChar(225)
-  Street           String             @db.VarChar(225)
-  City             String             @db.VarChar(225)
-  State            String             @db.VarChar(225)
-  Country          String             @db.VarChar(225)
+  Name             String             @db.VarChar(50)
+  Street           String             @db.VarChar(50)
+  City             String             @db.VarChar(20)
   Created_Datetime DateTime           @default(now()) @db.Timestamp(6)
   Updated_Datetime DateTime?          @db.Timestamp(6)
   Zip_Code         Int
+  US_State_ID      Int
   Items            Items[]
   Purchase_Order   Purchase_Order[]
   Supplier_Contact Supplier_Contact[]
+  US_States        US_States          @relation(fields: [US_State_ID], references: [US_State_ID], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Audit_Actions {
   Audit_Log_Actions_ID Int          @id(map: "Audit_Log_Actions_pkey") @default(autoincrement())
-  Description          String       @db.VarChar(255)
+  Description          String       @db.VarChar(100)
   Created_Datetime     DateTime     @default(now()) @db.Timestamptz(6)
   Updated_Datetime     DateTime?    @db.Timestamp(6)
   Is_Active            Boolean      @default(true)
@@ -179,8 +168,8 @@ model Audit_Logs {
 
 model Audit_Type {
   Audit_Log_Type_ID Int          @id(map: "Audit_Log_Type_pkey") @default(autoincrement())
-  Name              String       @db.VarChar(255)
-  Description       String?      @db.VarChar(255)
+  Name              String       @db.VarChar(50)
+  Description       String?      @db.VarChar(100)
   Created_Datetime  DateTime     @default(now()) @db.Timestamp(6)
   Updated_Datetime  DateTime?    @db.Timestamp(6)
   Is_Active         Boolean?     @default(true)
@@ -209,8 +198,20 @@ model Location_Contact {
 
 model Location_Type {
   Location_Type_ID Int         @id @default(autoincrement())
-  Description      String      @db.VarChar(225)
+  Description      String      @db.VarChar(50)
   Created_Datetime DateTime    @default(now()) @db.Timestamp(6)
   Updated_Datetime DateTime?   @db.Timestamp(6)
   Locations        Locations[]
+}
+
+model US_States {
+  US_State_ID      Int         @id @default(autoincrement())
+  Name             String      @db.VarChar(50)
+  Abbreviation     String      @db.VarChar(2)
+  Capital          String?     @db.VarChar(50)
+  Region           String?     @db.VarChar(20)
+  Created_Datetime DateTime    @default(now()) @db.Timestamp(6)
+  Updated_Datetime DateTime?   @db.Timestamp(6)
+  Locations        Locations[]
+  Suppliers        Suppliers[]
 }

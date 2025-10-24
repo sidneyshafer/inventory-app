@@ -16,9 +16,8 @@ export async function getLocationStats() {
       _sum: { Max_Capacity: true },
     }),
 
-    // Current Stock (sum of all item quantities assigned to locations)
-    db.item_Location.aggregate({
-      _count: { Item_Location_ID: true },
+    db.items.aggregate({
+      _count: { Quantity: true },
     }),
   ]);
 
@@ -26,6 +25,6 @@ export async function getLocationStats() {
     totalLocations,
     activeLocations,
     totalCapacity: totalCapacity._sum.Max_Capacity ?? 0,
-    currentStock: currentStock._count.Item_Location_ID ?? 0,
+    currentStock: currentStock._count.Quantity ?? 0,
   };
 }
