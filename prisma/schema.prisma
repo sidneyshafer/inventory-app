@@ -24,8 +24,11 @@ model Users {
   Role_ID          Int
   Created_Datetime DateTime     @default(now()) @db.Timestamp(6)
   Updated_Datetime DateTime?    @db.Timestamp(6)
+  Is_Active        Boolean      @default(true)
+  Department_ID    Int
   Audit_Logs       Audit_Logs[]
   Roles            Roles        @relation(fields: [Role_ID], references: [Role_ID], onDelete: NoAction, onUpdate: NoAction, map: "Foreign Key Role_ID")
+  Departments      Departments  @relation(fields: [Department_ID], references: [Department_ID], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Categories {
@@ -254,4 +257,13 @@ model Purchase_Order_Status {
   Updated_Datetime         DateTime?        @db.Timestamp(6)
   Is_Active                Boolean          @default(true)
   Purchase_Order           Purchase_Order[]
+}
+
+model Departments {
+  Department_ID    Int       @id
+  Name             String    @db.VarChar(50)
+  Is_Active        Boolean   @default(true)
+  Created_Datetime DateTime  @default(now()) @db.Timestamp(6)
+  Updated_Datetime DateTime? @db.Timestamp(6)
+  Users            Users[]
 }

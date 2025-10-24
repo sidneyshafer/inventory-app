@@ -43,12 +43,12 @@ import {
     Eye, 
     Filter 
 } from "lucide-react"
-import { ItemsPromise } from "@/server/database/items/GET/getItems"
+import { ItemsPromise, getItems } from "@/server/database/items/GET/getItems"
 import { getItemStats } from "@/server/database/items/GET/getItemStats"
 import { IN_STOCK_ID, LOW_STOCK_ID, OUT_OF_STOCK_ID } from "@/types/db-ids"
 
 interface ItemsDashboardProps {
-    items: ItemsPromise[]
+    items: Awaited<ReturnType<typeof getItems>>
     stats: Awaited<ReturnType<typeof getItemStats>>
 }
 
@@ -56,6 +56,9 @@ export default function ItemsDashboard({
     items,
     stats
 }: ItemsDashboardProps) {
+
+  const { data, count, pageCount } = items;
+
   const [searchQuery, setSearchQuery] = useState("")
   const [categoryFilter, setCategoryFilter] = useState("all")
   const [statusFilter, setStatusFilter] = useState("all")
@@ -183,14 +186,14 @@ export default function ItemsDashboard({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {items.length === 0 ? (
+                {data.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={9} className="h-24 text-center">
                       No items found.
                     </TableCell>
                   </TableRow>
                 ) : (
-                  items.map((item) => (
+                  data.map((item) => (
                     <TableRow key={item.Item_ID}>
                       <TableCell className="font-medium">ITM-0{item.Item_ID}</TableCell>
                       <TableCell>{item.Name}</TableCell>
@@ -240,7 +243,7 @@ export default function ItemsDashboard({
 
           {/* Results Summary */}
           <div className="mt-4 text-sm text-muted-foreground">
-            Showing {items.length} of {items.length} items
+            Showing {data.length} of {data.length} items
           </div>
         </CardContent>
       </Card>

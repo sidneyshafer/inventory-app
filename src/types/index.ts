@@ -3,3 +3,7 @@ export type navItem = {
     url: string
     icon: React.ReactNode
 }
+
+export interface SearchParams {
+  [key: string]: string | string[] | undefined;
+}
