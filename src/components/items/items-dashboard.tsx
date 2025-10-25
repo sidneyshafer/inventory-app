@@ -23,9 +23,15 @@ interface ItemsDashboardProps {
     totalPages: number
   }
   stats: Awaited<ReturnType<typeof getItemStats>>
+  locationFilters: { value: string; label: string }[]
 }
 
-export default function ItemsDashboard({ initialData, initialPagination, stats }: ItemsDashboardProps) {
+export default function ItemsDashboard({ 
+  initialData, 
+  initialPagination, 
+  stats,
+  locationFilters
+}: ItemsDashboardProps) {
   const {
     data,
     searchQuery,
@@ -45,7 +51,9 @@ export default function ItemsDashboard({ initialData, initialPagination, stats }
   } = useDataTableFilters({
     initialData,
     initialPagination,
-    filterConfigs: itemsFilterConfigs,
+    filterConfigs: itemsFilterConfigs({ 
+      locations: locationFilters 
+    }),
     fetchData: async ({ page, pageSize, search, filters }) => {
       const result = await getItemsAction({
         page,
@@ -116,7 +124,9 @@ export default function ItemsDashboard({ initialData, initialPagination, stats }
             onSearchChange={setSearchQuery}
             onSearch={handleSearch}
             filters={filters}
-            filterConfigs={itemsFilterConfigs}
+            filterConfigs={itemsFilterConfigs({ 
+              locations: locationFilters 
+            })}
             onFilterChange={handleFilterChange}
             onRemoveFilter={removeFilter}
             onClearAll={clearAllFilters}

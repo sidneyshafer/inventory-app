@@ -58,8 +58,8 @@ export async function getItems(input: GetItemsSchema) {
   const searchResult: Prisma.ItemsWhereInput = Search_Term
     ? {
         OR: searchTerms.flatMap((term) => [
-          { Name: { contains: term } },
-          { SKU: { contains: term } },
+          { Name: { contains: term, mode: "insensitive" } },
+          { SKU: { contains: term, mode: "insensitive" } },
         ]),
       }
     : {};

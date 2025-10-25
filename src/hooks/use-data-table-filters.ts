@@ -3,12 +3,7 @@
 import { useState, useCallback } from "react"
 import type { PaginationState } from "@tanstack/react-table"
 import { useSearchParams } from "./use-search-params"
-
-export interface FilterConfig {
-  key: string
-  label: string
-  options: { value: string; label: string }[]
-}
+import { FilterConfig } from "@/types"
 
 export interface UseDataTableFiltersProps<TData> {
   initialData: TData[]

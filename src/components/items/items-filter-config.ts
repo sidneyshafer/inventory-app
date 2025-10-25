@@ -1,6 +1,12 @@
-import type { FilterConfig } from "@/hooks/use-data-table-filters"
+import type { FilterConfig } from "@/types"
 
-export const itemsFilterConfigs: FilterConfig[] = [
+interface itemsFilterConfigsProps {
+  locations: { value: string; label: string }[]
+}
+
+export const itemsFilterConfigs = ({
+  locations
+}: itemsFilterConfigsProps): FilterConfig[] => [
   {
     key: "category",
     label: "Category",
@@ -14,23 +20,19 @@ export const itemsFilterConfigs: FilterConfig[] = [
   {
     key: "location",
     label: "Location",
-    options: [
-      { value: "all", label: "All Locations" },
-      { value: "Warehouse A", label: "Warehouse A" },
-      { value: "Warehouse B", label: "Warehouse B" },
-    ],
+    options: locations,
   },
-  {
-    key: "quantityRange",
-    label: "Quantity Range",
-    options: [
-      { value: "all", label: "All Quantities" },
-      { value: "0-50", label: "0 - 50" },
-      { value: "51-100", label: "51 - 100" },
-      { value: "101-200", label: "101 - 200" },
-      { value: "201+", label: "201+" },
-    ],
-  },
+  // {
+  //   key: "quantityRange",
+  //   label: "Quantity Range",
+  //   options: [
+  //     { value: "all", label: "All Quantities" },
+  //     { value: "0-50", label: "0 - 50" },
+  //     { value: "51-100", label: "51 - 100" },
+  //     { value: "101-200", label: "101 - 200" },
+  //     { value: "201+", label: "201+" },
+  //   ],
+  // },
   {
     key: "status",
     label: "Status",

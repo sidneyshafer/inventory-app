@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Search, X, SlidersHorizontal } from "lucide-react"
 import { useState } from "react"
-import type { FilterConfig } from "@/hooks/use-data-table-filters"
+import type { FilterConfig } from "@/types"
 
 interface DataTableFiltersProps {
   searchQuery: string
@@ -145,9 +145,6 @@ export function DataTableFilters({
               </Badge>
             )
           })}
-          <Button variant="ghost" size="sm" onClick={onClearAll} className="h-7 text-xs">
-            Clear all
-          </Button>
         </div>
       )}
     </div>
