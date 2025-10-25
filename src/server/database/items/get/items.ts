@@ -2,7 +2,7 @@ import "server-only";
 import { unstable_noStore as noStore } from "next/cache";
 import type { Prisma } from "@prisma/client";
 import { db } from "@/server/db";
-import { GetItemsSchema } from "../../../../lib/schemas/items/search-params";
+import { GetItemsSchema } from "@/lib/schemas/items/search-params";
 
 export type ItemsPromise = Prisma.ItemsGetPayload<{
   select: {

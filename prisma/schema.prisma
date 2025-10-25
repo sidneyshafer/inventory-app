@@ -95,19 +95,19 @@ model Locations {
 }
 
 model Purchase_Order {
-  Purchase_Order_ID       Int                     @id @default(autoincrement())
-  Supplier_ID             Int
-  Status_ID               Int
-  Created_Datetime        DateTime                @default(now()) @db.Timestamp(6)
-  Updated_Datetime        DateTime?               @db.Timestamp(6)
-  Is_Active               Boolean                 @default(true)
-  Order_Date_Made         DateTime?               @db.Date
-  Order_Date_Recieved     DateTime?               @db.Date
-  Priority_ID             Int
-  Purchase_Order_Priority Purchase_Order_Priority @relation(fields: [Priority_ID], references: [Purchase_Order_Priority_ID], onDelete: NoAction, onUpdate: NoAction)
-  Status                  Purchase_Order_Status   @relation(fields: [Status_ID], references: [Purchase_Order_Status_ID], onDelete: NoAction, onUpdate: NoAction)
-  Suppliers               Suppliers               @relation(fields: [Supplier_ID], references: [Supplier_ID], onDelete: NoAction, onUpdate: NoAction)
-  Purchase_Order_Item     Purchase_Order_Item[]
+  Purchase_Order_ID        Int                     @id @default(autoincrement())
+  Supplier_ID              Int
+  Purchase_Order_Status_ID Int
+  Created_Datetime         DateTime                @default(now()) @db.Timestamp(6)
+  Updated_Datetime         DateTime?               @db.Timestamp(6)
+  Is_Active                Boolean                 @default(true)
+  Order_Date_Made          DateTime?               @db.Date
+  Order_Date_Received      DateTime?               @db.Date
+  Priority_ID              Int
+  Purchase_Order_Priority  Purchase_Order_Priority @relation(fields: [Priority_ID], references: [Purchase_Order_Priority_ID], onDelete: NoAction, onUpdate: NoAction)
+  Purchase_Order_Status    Purchase_Order_Status   @relation(fields: [Purchase_Order_Status_ID], references: [Purchase_Order_Status_ID], onDelete: NoAction, onUpdate: NoAction)
+  Suppliers                Suppliers               @relation(fields: [Supplier_ID], references: [Supplier_ID], onDelete: NoAction, onUpdate: NoAction)
+  Purchase_Order_Item      Purchase_Order_Item[]
 }
 
 model Purchase_Order_Item {

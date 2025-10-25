@@ -13,7 +13,7 @@ import type { ColumnDef } from "@tanstack/react-table"
 import type { ItemsPromise } from "@/server/database/items/get/items"
 import { IN_STOCK_ID, LOW_STOCK_ID, OUT_OF_STOCK_ID } from "@/types/db-ids"
 
-export function getStatusBadge(id: number, text: string) {
+const getStatusBadge = (id: number, text: string) => {
   switch (id) {
     case IN_STOCK_ID:
       return <Badge className="bg-green-500/10 text-green-500 hover:bg-green-500/20">{text}</Badge>
