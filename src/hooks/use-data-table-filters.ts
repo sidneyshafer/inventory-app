@@ -3,7 +3,12 @@
 import { useState, useCallback } from "react"
 import type { PaginationState } from "@tanstack/react-table"
 import { useSearchParams } from "./use-search-params"
-import { FilterConfig } from "@/types"
+
+export interface FilterConfig {
+  key: string
+  label: string
+  options: { value: string; label: string }[]
+}
 
 export interface UseDataTableFiltersProps<TData> {
   initialData: TData[]
@@ -142,11 +147,17 @@ export function useDataTableFilters<TData>({
   const clearAllFilters = useCallback(() => {
     const clearedFilters = filterConfigs.reduce((acc, config) => ({ ...acc, [config.key]: "all" }), {})
     const newPagination = { ...pagination, pageIndex: 0 }
-    setSearchQuery("")
     setFilters(clearedFilters)
     setPagination(newPagination)
-    setTimeout(() => fetch(newPagination, "", clearedFilters), 0)
-  }, [filterConfigs, pagination, fetch])
+    setTimeout(() => fetch(newPagination, searchQuery, clearedFilters), 0)
+  }, [filterConfigs, pagination, searchQuery, fetch])
+
+  const clearSearch = useCallback(() => {
+    const newPagination = { ...pagination, pageIndex: 0 }
+    setSearchQuery("")
+    setPagination(newPagination)
+    setTimeout(() => fetch(newPagination, "", filters), 0)
+  }, [pagination, filters, fetch])
 
   const removeFilter = useCallback(
     (key: string) => {
@@ -159,7 +170,8 @@ export function useDataTableFilters<TData>({
     [filters, pagination, searchQuery, fetch],
   )
 
-  const hasActiveFilters = searchQuery !== "" || Object.values(filters).some((value) => value !== "all")
+  const hasActiveSearch = searchQuery !== ""
+  const hasActiveFilters = Object.values(filters).some((value) => value !== "all")
   const activeFilterCount = Object.values(filters).filter((value) => value !== "all").length
 
   return {
@@ -175,7 +187,9 @@ export function useDataTableFilters<TData>({
     handleFilterChange,
     handlePaginationChange,
     clearAllFilters,
+    clearSearch,
     removeFilter,
+    hasActiveSearch,
     hasActiveFilters,
     activeFilterCount,
   }

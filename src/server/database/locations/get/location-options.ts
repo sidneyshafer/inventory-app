@@ -1,10 +1,8 @@
-// /server/database/locations/get/getLocationFilters.ts
-
 import "server-only"
 import { unstable_noStore as noStore } from "next/cache"
 import { db } from "@/server/db"
 
-export async function getLocationFilters() {
+export async function getLocationOptions() {
   noStore()
 
   const locations = await db.locations.findMany({
@@ -23,5 +21,5 @@ export async function getLocationFilters() {
     label: loc.Description,
   }))
 
-  return [{ value: "all", label: "All Locations" }, ...options]
+  return options;
 }

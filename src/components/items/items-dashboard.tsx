@@ -13,6 +13,7 @@ import { DataTablePagination } from "@/components/data-table/data-table-paginati
 import { itemsColumns } from "./items-columns"
 import { itemsFilterConfigs } from "./items-filter-config"
 import { ItemsStats } from "./items-stats"
+import { FilterOption } from "@/types"
 
 interface ItemsDashboardProps {
   initialData: ItemsPromise[]
@@ -23,14 +24,18 @@ interface ItemsDashboardProps {
     totalPages: number
   }
   stats: Awaited<ReturnType<typeof getItemStats>>
-  locationFilters: { value: string; label: string }[]
+  locations: FilterOption[]
+  statuses: FilterOption[]
+  categories: FilterOption[]
 }
 
 export default function ItemsDashboard({ 
   initialData, 
   initialPagination, 
-  stats,
-  locationFilters
+  stats, 
+  locations,
+  statuses,
+  categories
 }: ItemsDashboardProps) {
   const {
     data,
@@ -45,15 +50,15 @@ export default function ItemsDashboard({
     handleFilterChange,
     handlePaginationChange,
     clearAllFilters,
+    clearSearch,
     removeFilter,
+    hasActiveSearch,
     hasActiveFilters,
     activeFilterCount,
   } = useDataTableFilters({
     initialData,
     initialPagination,
-    filterConfigs: itemsFilterConfigs({ 
-      locations: locationFilters 
-    }),
+    filterConfigs: itemsFilterConfigs({ locations, statuses, categories }),
     fetchData: async ({ page, pageSize, search, filters }) => {
       const result = await getItemsAction({
         page,
@@ -103,7 +108,7 @@ export default function ItemsDashboard({
 
       <ItemsStats stats={stats} />
 
-      <Card>
+      <Card className="rounded-md shadow-none">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
@@ -123,13 +128,13 @@ export default function ItemsDashboard({
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             onSearch={handleSearch}
+            onClearSearch={clearSearch}
             filters={filters}
-            filterConfigs={itemsFilterConfigs({ 
-              locations: locationFilters 
-            })}
+            filterConfigs={itemsFilterConfigs({ locations, statuses, categories })}
             onFilterChange={handleFilterChange}
             onRemoveFilter={removeFilter}
             onClearAll={clearAllFilters}
+            hasActiveSearch={hasActiveSearch}
             hasActiveFilters={hasActiveFilters}
             activeFilterCount={activeFilterCount}
             isLoading={isLoading}

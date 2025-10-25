@@ -11,5 +11,10 @@ export interface SearchParams {
 export interface FilterConfig {
   key: string
   label: string
-  options: { value: string; label: string }[]
+  options: FilterOption[]
+}
+
+export interface FilterOption {
+  value: string 
+  label: string
 }

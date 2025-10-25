@@ -9,17 +9,19 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Search, X, SlidersHorizontal } from "lucide-react"
 import { useState } from "react"
-import type { FilterConfig } from "@/types"
+import type { FilterConfig } from "@/hooks/use-data-table-filters"
 
 interface DataTableFiltersProps {
   searchQuery: string
   onSearchChange: (value: string) => void
   onSearch: () => void
+  onClearSearch: () => void
   filters: Record<string, string>
   filterConfigs: FilterConfig[]
   onFilterChange: (key: string, value: string) => void
   onRemoveFilter: (key: string) => void
   onClearAll: () => void
+  hasActiveSearch: boolean
   hasActiveFilters: boolean
   activeFilterCount: number
   isLoading?: boolean
@@ -30,11 +32,13 @@ export function DataTableFilters({
   searchQuery,
   onSearchChange,
   onSearch,
+  onClearSearch,
   filters,
   filterConfigs,
   onFilterChange,
   onRemoveFilter,
   onClearAll,
+  hasActiveSearch,
   hasActiveFilters,
   activeFilterCount,
   isLoading,
@@ -57,8 +61,19 @@ export function DataTableFilters({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && onSearch()}
-            className="pl-9"
+            className="pl-9 pr-9"
           />
+          {hasActiveSearch && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClearSearch}
+              className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 p-0 hover:bg-muted"
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Clear search</span>
+            </Button>
+          )}
         </div>
         <Button onClick={onSearch} disabled={isLoading} variant="secondary">
           Search
@@ -106,7 +121,7 @@ export function DataTableFilters({
                       {config.label}
                     </Label>
                     <Select value={filters[config.key]} onValueChange={(value) => onFilterChange(config.key, value)}>
-                      <SelectTrigger id={`${config.key}-filter`} className="h-9">
+                      <SelectTrigger id={`${config.key}-filter`} className="h-9 w-[180px]">
                         <SelectValue placeholder={`All ${config.label}`} />
                       </SelectTrigger>
                       <SelectContent>
@@ -125,7 +140,7 @@ export function DataTableFilters({
         </Popover>
       </div>
 
-      {Object.entries(filters).some(([_, value]) => value !== "all") && (
+      {hasActiveFilters && (
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm text-muted-foreground">Active filters:</span>
           {filterConfigs.map((config) => {
