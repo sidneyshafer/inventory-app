@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/sonner";
 import Navigation from "@/components/ui/navigation";
 import { mainNavItems, systemNavItems } from "@/lib/links";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google"
+import { GeistSans } from "geist/font/sans";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +22,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning={true}>
-      <body className={`font-sans antialiased h-screen flex flex-col overflow-hidden m-0 p-0`}>
+      <body className={`${GeistSans.className} antialiased h-screen flex flex-col overflow-hidden m-0 p-0`}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
