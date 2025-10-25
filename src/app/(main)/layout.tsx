@@ -22,7 +22,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning={true}>
-      <body className={`${GeistSans.className} antialiased h-screen flex flex-col overflow-hidden m-0 p-0`}>
+      <body className={`${GeistSans.className} antialiased h-screen flex flex-col m-0 p-0`}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
