@@ -1,7 +1,7 @@
 "use server"
 
-import { getSuppliers } from "@/server/database/suppliers/GET/getSuppliers";
-import { getSupplierStats } from "@/server/database/suppliers/GET/getSupplierStats";
+import { getSuppliers } from "@/server/database/suppliers/get/suppliers";
+import { getSupplierStats } from "@/server/database/suppliers/get/supplier-stats";
 import SuppliersDashboard from "@/components/suppliers";
 
 export default async function SuppliersPage() {

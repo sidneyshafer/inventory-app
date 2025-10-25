@@ -1,10 +1,10 @@
 "use server"
 
-import { getItems } from "@/server/database/items/GET/getItems";
-import { getItemStats } from "@/server/database/items/GET/getItemStats";
-import ItemsDashboard from "@/components/items";
+import { getItems } from "@/server/database/items/get/items";
+import { getItemStats } from "@/server/database/items/get/item-stats";
+import ItemsDashboard from "@/components/items/items-dashboard";
 import type { SearchParams } from "@/types";
-import { searchParamsSchema } from "@/server/database/items/GET/schema";
+import { searchParamsSchema } from "@/lib/schemas/items/search-params";
 
 interface ItemsPageProps {
   searchParams: Promise<SearchParams>;
@@ -21,7 +21,8 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
 
   return (
     <ItemsDashboard 
-      items={items} 
+      initialData={items.data}
+      initialPagination={items.pagination}
       stats={stats} 
     />
   );
