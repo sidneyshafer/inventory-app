@@ -18,3 +18,10 @@ export interface FilterOption {
   value: string 
   label: string
 }
+
+export type ActionResult<T = unknown> = {
+  success: boolean;
+  message: string;
+  data?: T;
+  errors?: Record<string, unknown>;
+};
