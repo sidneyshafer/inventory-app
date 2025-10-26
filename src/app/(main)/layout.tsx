@@ -9,7 +9,7 @@ import { GeistSans } from "geist/font/sans";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Inventory Management App (IMA)",
+  title: "Inventory Pro",
   description: "Modern inventory management application",
   icons: [{ rel: "icon", url: "./favicon.ico" }],
 };
