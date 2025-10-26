@@ -12,6 +12,7 @@ import { MoreHorizontal, Edit, Trash2, Eye } from "lucide-react"
 import type { ColumnDef } from "@tanstack/react-table"
 import type { ItemsPromise } from "@/server/database/items/get/items"
 import { IN_STOCK_ID, LOW_STOCK_ID, OUT_OF_STOCK_ID } from "@/types/db-ids"
+import Link from "next/link";
 
 const getStatusBadge = (id: number, text: string) => {
   switch (id) {
@@ -93,12 +94,22 @@ export const itemsColumns: ColumnDef<ItemsPromise>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>
-              <Eye className="mr-2 h-4 w-4" />
-              View Details
+              <Link 
+                href={`/items/view/${row.original.Item_ID}`} 
+                className="flex items-center"
+              >
+                <Eye className="mr-2 h-4 w-4" />
+                View Details
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Edit className="mr-2 h-4 w-4" />
-              Edit Item
+              <Link 
+                href={`/items/edit/${row.original.Item_ID}`} 
+                className="flex items-center"
+              >
+                <Edit className="mr-2 h-4 w-4" />
+                Edit Item
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>

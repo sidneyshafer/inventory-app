@@ -41,6 +41,15 @@ import {
   OUT_OF_STOCK_ID 
 } from "@/types/db-ids"
 import { Field, FieldLabel } from "@/components/ui/field"
+import { 
+  AlertDialog, 
+  AlertDialogAction, 
+  AlertDialogCancel, 
+  AlertDialogContent, 
+  AlertDialogDescription, 
+  AlertDialogFooter, 
+  AlertDialogHeader, 
+  AlertDialogTitle } from "@/components/ui/alert-dialog"
 
 interface AddItemModalProps {
   categories: FilterOption[]
@@ -52,6 +61,8 @@ interface AddItemModalProps {
 export function AddItemModal({ categories, suppliers, locations, statuses }: AddItemModalProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [isDirty, setIsDirty] = useState(false)
+  const [showExitConfirm, setShowExitConfirm] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const totalSteps = 4
 
@@ -167,11 +178,34 @@ export function AddItemModal({ categories, suppliers, locations, statuses }: Add
     return locations.find((l) => Number(l.value) === id)?.label || "N/A"
   }
 
+  useEffect(() => {
+    setIsDirty(form.formState.isDirty)
+  }, [form.watch()])
+
+  const handleClose = () => {
+    if (form.formState.isDirty) {
+      setShowExitConfirm(true)
+    } else {
+      router.back()
+    }
+  }
+
+  const handleConfirmExit = () => {
+    setShowExitConfirm(false)
+    router.back()
+  }
+
   return (
-    <Dialog open={true} onOpenChange={() => router.back()}>
+    <>
+    <Dialog open={true} onOpenChange={handleClose}>
       <DialogContent
         className="max-h-[90vh] overflow-y-auto sm:max-w-[500px]"
-        onPointerDownOutside={(e) => e.preventDefault()}
+        onPointerDownOutside={(e) => {
+          if (isDirty) {
+            e.preventDefault()
+            setShowExitConfirm(true)
+          }
+        }}
       >
         <DialogHeader>
           <DialogTitle>Add New Item</DialogTitle>
@@ -481,7 +515,7 @@ export function AddItemModal({ categories, suppliers, locations, statuses }: Add
             )}
 
             <DialogFooter className="gap-2">
-              <Button type="button" variant="outline" onClick={() => router.back()}>
+              <Button type="button" variant="outline" onClick={handleClose}>
                 Cancel
               </Button>
               <div className="flex gap-2">
@@ -505,5 +539,26 @@ export function AddItemModal({ categories, suppliers, locations, statuses }: Add
         </Form>
       </DialogContent>
     </Dialog>
+
+    <AlertDialog open={showExitConfirm} onOpenChange={setShowExitConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have unsaved changes. Are you sure you want to leave? All your changes will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Continue Editing</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmExit}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Discard Changes
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   )
 }
