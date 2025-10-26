@@ -5,7 +5,7 @@ import { Plus, X } from "lucide-react"
 import type { ItemsPromise } from "@/server/database/items/get/items"
 import type { getItemStats } from "@/server/database/items/get/item-stats"
 import { useReactTable, getCoreRowModel } from "@tanstack/react-table"
-import { getItemsAction } from "@/server/actions/items/get/items"
+import { getItemsAction } from "@/server/actions/items/get/action"
 import { useDataTableFilters } from "@/hooks/use-data-table-filters"
 import { DataTable } from "@/components/data-table/data-table"
 import { DataTableFilters } from "@/components/data-table/data-table-filters"
@@ -14,6 +14,7 @@ import { itemsColumns } from "./items-columns"
 import { itemsFilterConfigs } from "./items-filter-config"
 import { ItemsStats } from "./items-stats"
 import { FilterOption } from "@/types"
+import { useRouter } from "next/navigation"
 
 interface ItemsDashboardProps {
   initialData: ItemsPromise[]
@@ -37,6 +38,8 @@ export default function ItemsDashboard({
   statuses,
   categories
 }: ItemsDashboardProps) {
+  const router = useRouter()
+  
   const {
     data,
     searchQuery,
@@ -100,7 +103,7 @@ export default function ItemsDashboard({
           <h1 className="text-3xl font-bold tracking-tight">Items</h1>
           <p className="text-muted-foreground">Manage your inventory items</p>
         </div>
-        <Button>
+        <Button onClick={() => router.push(`/items/create`)}>
           <Plus className="mr-2 h-4 w-4" />
           Add Item
         </Button>
