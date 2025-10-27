@@ -14,7 +14,7 @@ export async function getPurchaseOrderStats() {
     }),
 
     db.purchase_Order.count({
-      where: { Purchase_Order_Priority: { Purchase_Order_Priority_ID: PRIORITY_HIGH } },
+      where: { Purchase_Order_Priority_ID: PRIORITY_HIGH },
     }),
 
     db.purchase_Order_Item.aggregate({

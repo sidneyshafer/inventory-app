@@ -525,9 +525,6 @@ export function AddItemModal({
             )}
 
             <DialogFooter className="gap-2">
-              <Button type="button" variant="outline" onClick={handleClose}>
-                Cancel
-              </Button>
               <div className="flex gap-2">
                 {currentStep > 1 && (
                   <Button type="button" variant="outline" onClick={(e) => handlePrevious(e)}>

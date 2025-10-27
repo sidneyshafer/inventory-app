@@ -7,7 +7,7 @@ import { getSupplierOptions } from "@/server/database/suppliers/get/supplier-opt
 import { getPurchaseOrderPriorityOptions } from "@/server/database/purchase-order-priority/get/priority-options";
 import PurchaseOrderDashboard from "@/components/purchase-orders/dashboard";
 import type { SearchParams } from "@/types";
-import { searchParamsSchema } from "@/lib/schemas/items/search-params";
+import { searchParamsSchema } from "@/lib/schemas/purchase-orders/search-params";
 
 interface PurchaseOrdersPageProps {
   searchParams: Promise<SearchParams>;

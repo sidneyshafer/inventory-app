@@ -416,9 +416,6 @@ export function EditItemModal({
             </div>
 
             <DialogFooter className="gap-2">
-              <Button type="button" variant="outline" onClick={handleClose}>
-                Cancel
-              </Button>
               <Button type="submit" disabled={loading}>
                 {loading ? "Updating..." : "Update Item"}
               </Button>

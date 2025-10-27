@@ -33,7 +33,7 @@ export const purchaseOrderFilterFields = ({
       value: status.value,
     })),
   },
-    {
+  {
     label: "Priority",
     value: "Priority_ID",
     options: priorities.map((pr) => ({

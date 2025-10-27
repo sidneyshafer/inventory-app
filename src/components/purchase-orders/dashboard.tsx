@@ -16,6 +16,8 @@ import { columnLabels, columnGroups } from "./column-labels-groups"
 import { PurchaseOrdersPromise } from "@/server/database/purchase-orders/get/purchase-orders"
 import { getPurchaseOrderStats } from "@/server/database/purchase-orders/get/purchase-order-stats"
 import { purchaseOrderFilterFields } from "./filter-config"
+import { useState } from "react"
+import { AddPurchaseOrderModal } from "./modals/add-purchase-order"
 
 interface PurchaseOrderDashboardProps {
   initialData: PurchaseOrdersPromise[]
@@ -40,6 +42,7 @@ export default function PurchaseOrderDashboard({
   priorities,
 }: PurchaseOrderDashboardProps) {
   const router = useRouter()
+  const [openCreateOrder, setOpenCreateOrder] = useState(false)
 
   const { table } = useDataTable({
     data: initialData,
@@ -66,7 +69,7 @@ export default function PurchaseOrderDashboard({
           <p className="text-muted-foreground">Manage and track purchase orders</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button onClick={() => router.push(`/purchase-orders/create`)}>
+          <Button onClick={() => setOpenCreateOrder(true)}>
             <Plus className="mr-2 h-4 w-4" />
             Create Order
           </Button>
@@ -101,6 +104,13 @@ export default function PurchaseOrderDashboard({
         </CardContent>
       </Card>
     </div>
+    <AddPurchaseOrderModal
+      open={openCreateOrder}
+      onOpenChange={setOpenCreateOrder}
+      suppliers={suppliers}
+      statuses={statuses}
+      priorities={priorities}
+    />
     </TableFiltersContextProvider>
   )
 }

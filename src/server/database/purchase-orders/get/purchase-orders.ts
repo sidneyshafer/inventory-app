@@ -7,9 +7,6 @@ import { GetPurchaseOrdersSchema } from "@/lib/schemas/purchase-orders/search-pa
 export type PurchaseOrdersPromise = Prisma.Purchase_OrderGetPayload<{
   select: {
       Purchase_Order_ID: true;
-      Supplier_ID: true;
-      Priority_ID: true;
-      Purchase_Order_Status_ID: true;
       Suppliers: {
         select: {
           Supplier_ID: true;
@@ -88,16 +85,13 @@ export async function getPurchaseOrders(input: GetPurchaseOrdersSchema) {
     ...searchResult,
     Supplier_ID: suppliers ? { in: suppliers.split(".").map(Number) } : undefined,
     Purchase_Order_Status_ID: statuses ? { in: statuses.split(".").map(Number) } : undefined,
-    Priority_ID: priorities ? { in: priorities.split(".").map(Number) } : undefined,
+    Purchase_Order_Priority_ID: priorities ? { in: priorities.split(".").map(Number) } : undefined,
   }
 
   const purchaseOrders = await db.purchase_Order.findMany({
     where,
     select: {
       Purchase_Order_ID: true,
-      Supplier_ID: true,
-      Priority_ID: true,
-      Purchase_Order_Status_ID: true,
       Suppliers: {
         select: {
           Supplier_ID: true,
