@@ -1,10 +1,10 @@
 "use server"
 
-import { getPurchaseOrders } from "@/server/database/purchase-orders/get/purchase-orders";
-import { getPurchaseOrderStats } from "@/server/database/purchase-orders/get/purchase-order-stats";
-import { getPurchaseOrderStatusOptions } from "@/server/database/purchase-order-status/get/status-options";
-import { getSupplierOptions } from "@/server/database/suppliers/get/supplier-options";
-import { getPurchaseOrderPriorityOptions } from "@/server/database/purchase-order-priority/get/priority-options";
+import { getPurchaseOrders } from "@/server/database/purchase-orders/getPurchaseOrders";
+import { getPurchaseOrderStats } from "@/server/database/purchase-orders/getPurchaseOrderStats";
+import { getPurchaseOrderStatusOptions } from "@/server/database/purchase-order-status/getStatusOptions";
+import { getSupplierOptions } from "@/server/database/suppliers/getSupplierOptions";
+import { getPurchaseOrderPriorityOptions } from "@/server/database/purchase-order-priority/getPriorityOptions";
 import PurchaseOrderDashboard from "@/components/purchase-orders/dashboard";
 import type { SearchParams } from "@/types";
 import { searchParamsSchema } from "@/lib/schemas/purchase-orders/search-params";

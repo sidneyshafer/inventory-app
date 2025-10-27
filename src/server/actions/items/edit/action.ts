@@ -2,7 +2,7 @@
 
 import type { ActionResult } from "@/types";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { editItem } from "@/server/database/items/edit/item";
+import { editItem } from "@/server/database/items/editItem";
 import { FormData } from "./schema";
 
 export async function editItemAction(args: FormData): Promise<ActionResult> {

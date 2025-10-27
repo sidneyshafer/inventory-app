@@ -32,8 +32,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { SuppliersPromise } from "@/server/database/suppliers/get/suppliers"
-import { getSupplierStats } from "@/server/database/suppliers/get/supplier-stats"
+import { SuppliersPromise } from "@/server/database/suppliers/getSuppliers"
+import { getSupplierStats } from "@/server/database/suppliers/getSupplierStats"
 
 interface SuppliersDashboardProps {
     suppliers: SuppliersPromise[]

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { MoreHorizontal, Edit, Trash2, Eye, Download } from "lucide-react"
 import type { ColumnDef } from "@tanstack/react-table"
-import type { PurchaseOrdersPromise } from "@/server/database/purchase-orders/get/purchase-orders"
+import type { PurchaseOrdersPromise } from "@/server/database/purchase-orders/getPurchaseOrders"
 import { 
   PENDING_APPROVAL,
   APPROVED,

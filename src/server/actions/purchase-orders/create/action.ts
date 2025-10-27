@@ -2,16 +2,17 @@
 
 import type { ActionResult } from "@/types";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { deleteItem } from "@/server/database/items/deleteItem";
+import { createPurchaseOrder } from "@/server/database/purchase-orders/createPurchaseOrder";
+import { FormData } from "./schema";
 
-export async function deleteItemAction(id: number): Promise<ActionResult> {
+export async function createPurchaseOrderAction(args: FormData): Promise<ActionResult> {
   try {
-    const res = await deleteItem(id);
+    const res = await createPurchaseOrder(args);
 
     if (!res?.success) {
       return {
         success: false,
-        message: res?.message || "Failed to delete item.",
+        message: res?.message || "Failed to create order.",
       };
     }
 

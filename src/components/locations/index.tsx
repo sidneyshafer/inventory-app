@@ -26,8 +26,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { LocationsPromise } from "@/server/database/locations/get/locations"
-import { getLocationStats } from "@/server/database/locations/get/location-stats"
+import { LocationsPromise } from "@/server/database/locations/getLocations"
+import { getLocationStats } from "@/server/database/locations/getLocationStats"
 
 interface LocationsDashboardProps {
     locations: LocationsPromise[]

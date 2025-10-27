@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { AlertTriangle } from "lucide-react"
-import { ItemsPromise } from "@/server/database/items/get/items"
+import { ItemsPromise } from "@/server/database/items/getItems"
 import { toast } from "sonner"
 import { useState } from "react"
 import { deleteItemAction } from "@/server/actions/items/delete/action"

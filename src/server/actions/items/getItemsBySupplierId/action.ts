@@ -1,6 +1,6 @@
 "use server";
 
-import { getItemsBySupplierId } from "@/server/database/items/get/item-by-supplier-id";
+import { getItemsBySupplierId } from "@/server/database/items/getItemBySupplierId";
 
 export async function getItemsBySupplierIdAction(id: number) {
   const res = await getItemsBySupplierId(id);

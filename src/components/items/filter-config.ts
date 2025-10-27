@@ -1,5 +1,5 @@
 import type { DataTableFilterField, FilterOption } from "@/types"
-import type { ItemsPromise } from "@/server/database/items/get/items"
+import type { ItemsPromise } from "@/server/database/items/getItems"
 
 interface itemsFilterConfigsProps {
   locations: FilterOption[]

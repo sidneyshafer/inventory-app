@@ -118,6 +118,7 @@ model Purchase_Order_Item {
   Purchase_Price         Decimal        @default(0) @db.Decimal(11, 2)
   Created_Datetime       DateTime       @default(now()) @db.Timestamp(6)
   Updated_Datetime       DateTime?      @db.Timestamp(6)
+  Quantity               Int
   Items                  Items          @relation(fields: [Item_ID], references: [Item_ID], onDelete: NoAction, onUpdate: NoAction)
   Purchase_Order         Purchase_Order @relation(fields: [Purchase_Order_ID], references: [Purchase_Order_ID], onDelete: NoAction, onUpdate: NoAction)
 }

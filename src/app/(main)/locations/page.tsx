@@ -1,7 +1,7 @@
 "use server"
 
-import { getLocations } from "@/server/database/locations/get/locations";
-import { getLocationStats } from "@/server/database/locations/get/location-stats";
+import { getLocations } from "@/server/database/locations/getLocations";
+import { getLocationStats } from "@/server/database/locations/getLocationStats";
 import LocationsDashboard from "@/components/locations";
 
 export default async function LocationsPage() {

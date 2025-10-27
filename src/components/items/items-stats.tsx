@@ -1,5 +1,5 @@
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import type { getItemStats } from "@/server/database/items/get/item-stats"
+import type { getItemStats } from "@/server/database/items/getItemStats"
 
 interface ItemsStatsProps {
   stats: Awaited<ReturnType<typeof getItemStats>>

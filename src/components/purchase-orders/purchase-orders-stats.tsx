@@ -1,5 +1,5 @@
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import type { getPurchaseOrderStats } from "@/server/database/purchase-orders/get/purchase-order-stats"
+import type { getPurchaseOrderStats } from "@/server/database/purchase-orders/getPurchaseOrderStats"
 
 interface PurchaseOrderStatsProps {
   stats: Awaited<ReturnType<typeof getPurchaseOrderStats>>

@@ -23,7 +23,7 @@ import {
   DollarSign, 
   TrendingDown 
 } from "lucide-react"
-import { ItemsPromise } from "@/server/database/items/get/items"
+import { ItemsPromise } from "@/server/database/items/getItems"
 
 interface ViewItemModalProps {
   item: ItemsPromise

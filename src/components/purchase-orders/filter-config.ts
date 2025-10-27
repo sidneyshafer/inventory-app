@@ -1,5 +1,5 @@
 import type { DataTableFilterField, FilterOption } from "@/types"
-import type { PurchaseOrdersPromise } from "@/server/database/purchase-orders/get/purchase-orders"
+import type { PurchaseOrdersPromise } from "@/server/database/purchase-orders/getPurchaseOrders"
 
 interface purchaseOrderFilterConfigsProps {
   suppliers: FilterOption[]

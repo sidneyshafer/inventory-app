@@ -47,7 +47,7 @@ import {
   AlertDialogHeader, 
   AlertDialogTitle } from "@/components/ui/alert-dialog"
 import { editItemAction } from "@/server/actions/items/edit/action"
-import { ItemsPromise } from "@/server/database/items/get/items"
+import { ItemsPromise } from "@/server/database/items/getItems"
 
 interface EditItemModalProps {
   item: ItemsPromise

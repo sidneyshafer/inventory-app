@@ -2,7 +2,7 @@
 
 import type { ActionResult } from "@/types";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { createItem } from "@/server/database/items/create/item";
+import { createItem } from "@/server/database/items/createItem";
 import { FormData } from "./schema";
 
 export async function createItemAction(args: FormData): Promise<ActionResult> {

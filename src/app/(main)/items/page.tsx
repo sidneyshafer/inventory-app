@@ -1,11 +1,11 @@
 "use server"
 
-import { getItems } from "@/server/database/items/get/items";
-import { getItemStats } from "@/server/database/items/get/item-stats";
-import { getLocationOptions } from "@/server/database/locations/get/location-options";
-import { getStatusOptions } from "@/server/database/item-status/get/status-options";
-import { getCategoryOptions } from "@/server/database/category/get/category-options";
-import { getSupplierOptions } from "@/server/database/suppliers/get/supplier-options";
+import { getItems } from "@/server/database/items/getItems";
+import { getItemStats } from "@/server/database/items/getItemStats";
+import { getLocationOptions } from "@/server/database/locations/getLocationOptions";
+import { getStatusOptions } from "@/server/database/item-status/getStatusOptions";
+import { getCategoryOptions } from "@/server/database/category/getCategoryOptions";
+import { getSupplierOptions } from "@/server/database/suppliers/getSupplierOptions";
 import ItemsDashboard from "@/components/items/dashboard";
 import type { SearchParams } from "@/types";
 import { searchParamsSchema } from "@/lib/schemas/items/search-params";

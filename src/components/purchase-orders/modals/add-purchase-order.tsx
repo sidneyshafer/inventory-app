@@ -48,7 +48,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { format as formatDate } from "date-fns"
 import { getItemsBySupplierIdAction } from "@/server/actions/items/getItemsBySupplierId/action"
 import { Calendar } from "@/components/ui/calendar"
-import { ItemResponse } from "@/server/database/items/get/item-by-supplier-id"
+import { ItemResponse } from "@/server/database/items/getItemBySupplierId"
+import { createPurchaseOrderAction } from "@/server/actions/purchase-orders/create/action"
 
 interface AddPurchaseOrderModalProps {
   open: boolean
@@ -140,21 +141,17 @@ export function AddPurchaseOrderModal({
     setLoading(true)
     console.log(values)
     try {
-    //   const res = await createItemAction(values)
-        const res = {
-            message: "",
-            errors: ""
-        }
+      const res = await createPurchaseOrderAction(values)
 
       setLoading(false)
 
       if (res.errors) {
-        toast.error("Failed to Add Item", {
-          description: res.message || "An error occurred while creating this item.",
+        toast.error("Failed to Create Order", {
+          description: res.message || "An error occurred while creating this order.",
         })
         console.error(res.errors)
       } else {
-        toast.success("Item Added Successfully")
+        toast.success("Order Created Successfully")
         router.refresh()
         onOpenChange(false)
       }

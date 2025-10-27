@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { MoreHorizontal, Edit, Trash2, Eye } from "lucide-react"
 import type { ColumnDef } from "@tanstack/react-table"
-import type { ItemsPromise } from "@/server/database/items/get/items"
+import type { ItemsPromise } from "@/server/database/items/getItems"
 import { IN_STOCK_ID, LOW_STOCK_ID, OUT_OF_STOCK_ID } from "@/types/db-ids"
 
 interface ItemsColumnsParams {
