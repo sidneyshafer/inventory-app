@@ -52,13 +52,22 @@ import {
   AlertDialogTitle } from "@/components/ui/alert-dialog"
 
 interface AddItemModalProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
   categories: FilterOption[]
   suppliers: FilterOption[]
   locations: FilterOption[]
   statuses: FilterOption[]
 }
 
-export function AddItemModal({ categories, suppliers, locations, statuses }: AddItemModalProps) {
+export function AddItemModal({ 
+  categories, 
+  suppliers, 
+  locations, 
+  statuses,
+  open,
+  onOpenChange
+}: AddItemModalProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [isDirty, setIsDirty] = useState(false)
@@ -156,7 +165,8 @@ export function AddItemModal({ categories, suppliers, locations, statuses }: Add
         console.error(res.errors)
       } else {
         toast.success("Item Added Successfully")
-        router.back()
+        router.refresh()
+        onOpenChange(false)
       }
     } catch (err) {
       toast.error("An unexpected error occurred", {
@@ -186,18 +196,18 @@ export function AddItemModal({ categories, suppliers, locations, statuses }: Add
     if (form.formState.isDirty) {
       setShowExitConfirm(true)
     } else {
-      router.back()
+      onOpenChange(false)
     }
   }
 
   const handleConfirmExit = () => {
     setShowExitConfirm(false)
-    router.back()
+    onOpenChange(false)
   }
 
   return (
     <>
-    <Dialog open={true} onOpenChange={handleClose}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent
         className="max-h-[90vh] overflow-y-auto sm:max-w-[500px]"
         onPointerDownOutside={(e) => {

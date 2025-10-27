@@ -16,10 +16,8 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-  modal
 }: {
   children: React.ReactNode;
-  modal: React.ReactNode;
 }) {
 
   return (
@@ -37,7 +35,6 @@ export default async function RootLayout({
               systemNavItems={systemNavItems}
             >
               {children}
-              {modal}
             </Navigation>
           </ThemeProvider>
       </body>

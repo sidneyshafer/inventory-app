@@ -23,10 +23,12 @@ import {
   DollarSign, 
   TrendingDown 
 } from "lucide-react"
-import { ItemPromise } from "@/server/database/items/get/item-by-id"
+import { ItemsPromise } from "@/server/database/items/get/items"
 
 interface ViewItemModalProps {
-  item: ItemPromise
+  item: ItemsPromise
+  open: boolean
+  onOpenChange: (open: boolean) => void
   categories: FilterOption[]
   suppliers: FilterOption[]
   locations: FilterOption[]
@@ -34,13 +36,14 @@ interface ViewItemModalProps {
 }
 
 export function ViewItemModal({ 
-  item, 
+  item,
+  open,
+  onOpenChange,
   categories, 
   suppliers, 
   locations, 
   statuses 
 }: ViewItemModalProps) {
-  const router = useRouter()
 
   const getCategoryLabel = () => categories.find((c) => Number(c.value) === item.Categories.Category_ID)?.label || "N/A"
   const getSupplierLabel = () => suppliers.find((s) => Number(s.value) === item.Suppliers.Supplier_ID)?.label || "N/A"
@@ -64,7 +67,7 @@ export function ViewItemModal({
   const totalValue = ((item.Quantity ?? 0) * (item.Unit_Price ?? 0))
 
   return (
-    <Dialog open={true} onOpenChange={() => router.back()}>
+    <Dialog open={open} onOpenChange={() => onOpenChange(false)}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
         <DialogHeader>
           <div className="flex items-start justify-between">

@@ -5,7 +5,7 @@ import { getPurchaseOrderStats } from "@/server/database/purchase-orders/get/pur
 import { getPurchaseOrderStatusOptions } from "@/server/database/purchase-order-status/get/status-options";
 import { getSupplierOptions } from "@/server/database/suppliers/get/supplier-options";
 import { getPurchaseOrderPriorityOptions } from "@/server/database/purchase-order-priority/get/priority-options";
-import PurchaseOrderDashboard from "@/components/purchase-orders/purchase-orders-dashboard";
+import PurchaseOrderDashboard from "@/components/purchase-orders/dashboard";
 import type { SearchParams } from "@/types";
 import { searchParamsSchema } from "@/lib/schemas/items/search-params";
 

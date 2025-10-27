@@ -61,6 +61,13 @@ const getPriorityBadge = (id: number, text: string) => {
 
 export const purchaseOrdersColumns: ColumnDef<PurchaseOrdersPromise>[] = [
   {
+    id: "Search_Term",
+    header: "",
+    cell: () => null,
+    enableHiding: true,
+    enableSorting: false,
+  },
+  {
     accessorKey: "Purchase_Order_ID",
     header: "Order ID",
     cell: ({ row }) => <span className="font-medium">PO-0{row.original.Purchase_Order_ID}</span>,

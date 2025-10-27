@@ -12,17 +12,20 @@ export type ItemsPromise = Prisma.ItemsGetPayload<{
     SKU: true;
     Categories: {
       select: {
+        Category_ID: true;
         Description: true;
       };
     };
     Quantity: true;
     Stock_Alerts: {
       select: {
+        Stock_Alerts_ID: true;
         Threshold: true;
       };
     };
     Locations: {
       select: {
+        Location_ID: true;
         Description: true;
       };
     };
@@ -32,11 +35,18 @@ export type ItemsPromise = Prisma.ItemsGetPayload<{
         Description: true;
       };
     };
+    Suppliers: {
+        select: {
+            Supplier_ID: true;
+            Name: true;
+        };
+    };
     Created_Datetime: true;
     Updated_Datetime: true;
   };
 }> & {
-  Unit_Price: number;
+    Unit_Price: number;
+    Threshold: number;
 };
 
 export async function getItems(input: GetItemsSchema) {
@@ -80,14 +90,23 @@ export async function getItems(input: GetItemsSchema) {
       Description: true,
       SKU: true,
       Categories: {
-        select: { Description: true },
+        select: {
+          Category_ID: true,
+          Description: true 
+        },
       },
       Quantity: true,
       Stock_Alerts: {
-        select: { Threshold: true },
+        select: {
+          Stock_Alerts_ID: true,
+          Threshold: true 
+        },
       },
       Locations: {
-        select: { Description: true },
+        select: {
+          Location_ID: true,
+          Description: true 
+        },
       },
       Unit_Price: true,
       Item_Status: {
@@ -95,6 +114,12 @@ export async function getItems(input: GetItemsSchema) {
           Item_Status_ID: true,
           Description: true,
         },
+      },
+      Suppliers: {
+        select: {
+          Supplier_ID: true,
+          Name: true
+        }
       },
       Created_Datetime: true,
       Updated_Datetime: true,
@@ -109,6 +134,7 @@ export async function getItems(input: GetItemsSchema) {
   const itemsWithPriceNumber = items.map((item) => ({
     ...item,
     Unit_Price: Number(item.Unit_Price),
+    Threshold: Number(item.Stock_Alerts[0].Threshold)
   }));
 
   return {

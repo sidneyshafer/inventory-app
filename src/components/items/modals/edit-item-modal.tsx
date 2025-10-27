@@ -37,7 +37,6 @@ import { useRouter } from "next/navigation"
 import { IN_STOCK_ID, LOW_STOCK_ID, OUT_OF_STOCK_ID } from "@/types/db-ids"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Badge } from "@/components/ui/badge"
-import { ItemPromise } from "@/server/database/items/get/item-by-id"
 import { 
   AlertDialog, 
   AlertDialogAction, 
@@ -48,17 +47,29 @@ import {
   AlertDialogHeader, 
   AlertDialogTitle } from "@/components/ui/alert-dialog"
 import { editItemAction } from "@/server/actions/items/edit/action"
+import { ItemsPromise } from "@/server/database/items/get/items"
 
 interface EditItemModalProps {
-  item: ItemPromise
+  item: ItemsPromise
+  open: boolean
+  onOpenChange: (open: boolean) => void
   categories: FilterOption[]
   suppliers: FilterOption[]
   locations: FilterOption[]
   statuses: FilterOption[]
 }
 
-export function EditItemModal({ item, categories, suppliers, locations, statuses }: EditItemModalProps) {
+export function EditItemModal({ 
+  item,
+  open,
+  onOpenChange,
+  categories, 
+  suppliers, 
+  locations, 
+  statuses 
+}: EditItemModalProps) {
   const router = useRouter()
+
   const [loading, setLoading] = useState(false)
   const [isDirty, setIsDirty] = useState(false)
   const [showExitConfirm, setShowExitConfirm] = useState(false)
@@ -128,7 +139,8 @@ export function EditItemModal({ item, categories, suppliers, locations, statuses
         console.error(res.errors)
       } else {
         toast.success("Item Updated Successfully")
-        router.back()
+        router.refresh()
+        onOpenChange(false)
       }
     } catch (err) {
       toast.error("An unexpected error occurred", {
@@ -146,18 +158,18 @@ export function EditItemModal({ item, categories, suppliers, locations, statuses
     if (isDirty) {
       setShowExitConfirm(true)
     } else {
-      router.back()
+      onOpenChange(false)
     }
   }
 
   const handleConfirmExit = () => {
     setShowExitConfirm(false)
-    router.back()
+    onOpenChange(false)
   }
 
   return (
     <>
-    <Dialog open={true} onOpenChange={handleClose}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent
         className="max-h-[90vh] overflow-y-auto sm:max-w-[700px]"
         onPointerDownOutside={(e) => {

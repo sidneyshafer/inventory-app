@@ -19,6 +19,26 @@ export interface FilterOption {
   label: string
 }
 
+export interface DataTableFilterField<TData> {
+  label: string
+  value: keyof TData | string
+  placeholder?: string
+  options?: {
+    label: string
+    value: string
+    icon?: React.ComponentType<{ className?: string }>
+    count?: number
+  }[]
+  isSlider?: boolean
+  isDateRange?: boolean
+}
+
+export interface DataTableFilterOption<TData> extends DataTableFilterField<TData> {
+  id: string
+  filterValues?: string[]
+  filterOperator?: string
+}
+
 export type ActionResult<T = unknown> = {
   success: boolean;
   message: string;

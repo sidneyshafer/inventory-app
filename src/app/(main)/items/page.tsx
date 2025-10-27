@@ -5,7 +5,8 @@ import { getItemStats } from "@/server/database/items/get/item-stats";
 import { getLocationOptions } from "@/server/database/locations/get/location-options";
 import { getStatusOptions } from "@/server/database/item-status/get/status-options";
 import { getCategoryOptions } from "@/server/database/category/get/category-options";
-import ItemsDashboard from "@/components/items/items-dashboard";
+import { getSupplierOptions } from "@/server/database/suppliers/get/supplier-options";
+import ItemsDashboard from "@/components/items/dashboard";
 import type { SearchParams } from "@/types";
 import { searchParamsSchema } from "@/lib/schemas/items/search-params";
 
@@ -17,12 +18,13 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
   const resolvedParams = await searchParams;
   const search = searchParamsSchema.parse(resolvedParams);
   
-  const [items, stats, locations, statuses, categories] = await Promise.all([
+  const [items, stats, locations, statuses, categories, suppliers] = await Promise.all([
     getItems(search), 
     getItemStats(),
     getLocationOptions(),
     getStatusOptions(),
-    getCategoryOptions()
+    getCategoryOptions(),
+    getSupplierOptions()
   ])
 
   return (
@@ -33,6 +35,7 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
       locations={locations}
       statuses={statuses}
       categories={categories}
+      suppliers={suppliers}
     />
   );
 }
