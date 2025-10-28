@@ -12,18 +12,11 @@ export async function getSupplierStats() {
       where: { Is_Active: true },
     }),
 
-    db.purchase_Order.count({
-      where: { Is_Active: true },
-    }),
+    db.purchase_Order.count(),
 
     db.purchase_Order_Item.aggregate({
       _sum: {
         Purchase_Price: true,
-      },
-      where: {
-        Purchase_Order: {
-          Is_Active: true,
-        },
       },
     }),
   ]);

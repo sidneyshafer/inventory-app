@@ -17,7 +17,8 @@ import { PurchaseOrdersPromise } from "@/server/database/purchase-orders/getPurc
 import { getPurchaseOrderStats } from "@/server/database/purchase-orders/getPurchaseOrderStats"
 import { purchaseOrderFilterFields } from "./filter-config"
 import { useState } from "react"
-import { AddPurchaseOrderModal } from "./modals/add-purchase-order"
+import { AddPurchaseOrderModal } from "./modals/add-purchase-order-modal"
+import { EditPurchaseOrderModal } from "./modals/edit-purchase-order-modal"
 
 interface PurchaseOrderDashboardProps {
   initialData: PurchaseOrdersPromise[]
@@ -41,12 +42,21 @@ export default function PurchaseOrderDashboard({
   statuses,
   priorities,
 }: PurchaseOrderDashboardProps) {
-  const router = useRouter()
+
+  const [selectedOrder, setSelectedOrder] = useState<(PurchaseOrdersPromise)| undefined>()
   const [openCreateOrder, setOpenCreateOrder] = useState(false)
+  const [openEditOrder, setOpenEditOrder] = useState(false)
+  const [openCancelOrder, setOpenCancelOrder] = useState(false)
+  const [openDetailsOrder, setOpenDetailsOrder] = useState(false)
 
   const { table } = useDataTable({
     data: initialData,
-    columns: purchaseOrdersColumns,
+    columns: purchaseOrdersColumns({
+      setSelectedOrder: setSelectedOrder,
+      setOpenEditModal: setOpenEditOrder,
+      setOpenCancelModal: setOpenCancelOrder,
+      setOpenDetailsModal: setOpenDetailsOrder
+    }),
     pageCount: initialPagination.totalPages,
     defaultPerPage: initialPagination.pageSize,
     filterFields: purchaseOrderFilterFields({ suppliers, statuses, priorities }),
@@ -104,6 +114,19 @@ export default function PurchaseOrderDashboard({
         </CardContent>
       </Card>
     </div>
+    {selectedOrder && (
+      <>
+        <EditPurchaseOrderModal 
+          order={selectedOrder}
+          onOrderChange={setSelectedOrder}
+          open={openEditOrder}
+          onOpenChange={setOpenEditOrder}
+          suppliers={suppliers}
+          statuses={statuses}
+          priorities={priorities}
+        />
+      </>
+    )}
     <AddPurchaseOrderModal
       open={openCreateOrder}
       onOpenChange={setOpenCreateOrder}

@@ -21,11 +21,6 @@ export async function getPurchaseOrderStats() {
       _sum: {
         Purchase_Price: true,
       },
-      where: {
-        Purchase_Order: {
-          Is_Active: true,
-        },
-      },
     }),
 
   ]);

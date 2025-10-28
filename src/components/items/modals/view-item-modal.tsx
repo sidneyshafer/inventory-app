@@ -29,6 +29,7 @@ interface ViewItemModalProps {
   item: ItemsPromise
   open: boolean
   onOpenChange: (open: boolean) => void
+  onItemChange: (item: ItemsPromise | undefined) => void
   categories: FilterOption[]
   suppliers: FilterOption[]
   locations: FilterOption[]
@@ -39,6 +40,7 @@ export function ViewItemModal({
   item,
   open,
   onOpenChange,
+  onItemChange,
   categories, 
   suppliers, 
   locations, 
@@ -67,7 +69,10 @@ export function ViewItemModal({
   const totalValue = ((item.Quantity ?? 0) * (item.Unit_Price ?? 0))
 
   return (
-    <Dialog open={open} onOpenChange={() => onOpenChange(false)}>
+    <Dialog open={open} onOpenChange={() => {
+        onOpenChange(false)
+        onItemChange(undefined)
+      }}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
         <DialogHeader>
           <div className="flex items-start justify-between">

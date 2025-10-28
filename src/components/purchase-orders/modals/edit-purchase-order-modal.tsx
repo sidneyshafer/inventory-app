@@ -29,11 +29,22 @@ import {
   FormMessage 
 } from "@/components/ui/form"
 import { toast } from "sonner"
-import { formSchema } from "@/server/actions/purchase-orders/create/schema"
+import { formSchema } from "@/server/actions/purchase-orders/edit/schema"
 import { useEffect, useState } from "react"
 import type { FilterOption } from "@/types"
 import { useRouter } from "next/navigation"
-import { PENDING_APPROVAL } from "@/types/db-ids"
+import { 
+    APPROVED, 
+    CANCELLED, 
+    COMPLETED, 
+    PENDING_APPROVAL, 
+    PRIORITY_HIGH, 
+    PRIORITY_LOW, 
+    PRIORITY_MEDIUM, 
+    RECEIVED_FULL, 
+    RECEIVED_PARTIAL, 
+    REJECTED 
+} from "@/types/db-ids"
 import { 
   AlertDialog, 
   AlertDialogAction, 
@@ -49,23 +60,29 @@ import { format as formatDate } from "date-fns"
 import { getItemsBySupplierIdAction } from "@/server/actions/items/getItemsBySupplierId/action"
 import { Calendar } from "@/components/ui/calendar"
 import { ItemResponse } from "@/server/database/items/getItemBySupplierId"
-import { createPurchaseOrderAction } from "@/server/actions/purchase-orders/create/action"
+import { PurchaseOrdersPromise } from "@/server/database/purchase-orders/getPurchaseOrders"
+import { Badge } from "@/components/ui/badge"
+import { editPurchaseOrderAction } from "@/server/actions/purchase-orders/edit/action"
 
-interface AddPurchaseOrderModalProps {
+interface EditPurchaseOrderModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  onOrderChange: (order: PurchaseOrdersPromise | undefined) => void
+  order: PurchaseOrdersPromise
   suppliers: FilterOption[]
   priorities: FilterOption[]
   statuses: FilterOption[]
 }
 
-export function AddPurchaseOrderModal({ 
+export function EditPurchaseOrderModal({ 
   priorities, 
   suppliers,
   statuses,
   open,
-  onOpenChange
-}: AddPurchaseOrderModalProps) {
+  onOpenChange,
+  onOrderChange,
+  order
+}: EditPurchaseOrderModalProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [isDirty, setIsDirty] = useState(false)
@@ -78,12 +95,18 @@ export function AddPurchaseOrderModal({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      supplierId: undefined,
-      priorityId: undefined,
-      statusId: PENDING_APPROVAL,
-      orderDate: "",
-      expectedDeliveryDate: "",
-      purchaseOrderItems: [],
+      purchaseOrderId: order.Purchase_Order_ID ?? undefined,
+      supplierId: order.Suppliers.Supplier_ID ?? undefined,
+      priorityId: order.Purchase_Order_Priority.Purchase_Order_Priority_ID ?? undefined,
+      statusId: order.Purchase_Order_Status.Purchase_Order_Status_ID ?? undefined,
+      orderDate: order.Order_Date_Made ?? "",
+      expectedDeliveryDate: order.Expected_Delivery_Date ?? "",
+      purchaseOrderItems: order.Purchase_Order_Item?.map((item) => ({
+        purchaseOrderItemId: item.Purchase_Order_Item_ID ?? null,
+        itemId: item.Item_ID ?? null,
+        quantity: Number(item.Quantity) ?? 1,
+        purchasePrice: Number(item.Purchase_Price) ?? 0,
+      })) ?? [],
     },
   })
 
@@ -95,12 +118,46 @@ export function AddPurchaseOrderModal({
     return priorities.find((p) => Number(p.value) === id)?.label || "N/A"
   }
 
+  const getItemLabel = (id: number | null) => {
+    return items.find((i) => Number(i.value) === id)?.label || "N/A"
+  }
+
   const getStatusLabel = (id: number | undefined) => {
     return statuses.find((s) => Number(s.value) === id)?.label || "N/A"
   }
 
-  const getItemLabel = (id: number | null) => {
-    return items.find((i) => Number(i.value) === id)?.label || "N/A"
+  const getStatusBadge = (id: number, text: string) => {
+    switch (id) {
+        case PENDING_APPROVAL:
+        return <Badge className="bg-orange-500/10 text-orange-500 hover:bg-orange-500/20">{text}</Badge>
+        case APPROVED:
+        return <Badge className="bg-blue-500/10 text-blue-500 hover:bg-blue-500/20">{text}</Badge>
+        case RECEIVED_PARTIAL:
+        return <Badge className="bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20">{text}</Badge>
+        case RECEIVED_FULL:
+        return <Badge className="bg-purple-500/10 text-purple-500 hover:bg-purple-500/20">{text}</Badge>
+        case COMPLETED:
+        return <Badge className="bg-green-500/10 text-green-500 hover:bg-green-500/20">{text}</Badge>
+        case CANCELLED:
+        return <Badge className="bg-red-500/10 text-red-500 hover:bg-red-500/20">{text}</Badge>
+        case REJECTED:
+        return <Badge className="bg-red-500/10 text-red-500 hover:bg-red-500/20">{text}</Badge>
+        default:
+        return <Badge>{text}</Badge>
+    }
+  }
+
+  const getPriorityBadge = (id: number, text: string) => {
+    switch (id) {
+      case PRIORITY_HIGH:
+        return <Badge variant="destructive">{text}</Badge>
+      case PRIORITY_MEDIUM:
+        return <Badge variant="outline">{text}</Badge>
+      case PRIORITY_LOW:
+        return <Badge variant="secondary">{text}</Badge>
+      default:
+        return <Badge>{text}</Badge>
+    }
   }
 
   const validateStep = async (step: number) => {
@@ -140,18 +197,19 @@ export function AddPurchaseOrderModal({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true)
     console.log(values)
+    
     try {
-      const res = await createPurchaseOrderAction(values)
+      const res = await editPurchaseOrderAction(values)
 
       setLoading(false)
 
       if (res.errors) {
-        toast.error("Failed to Create Order", {
-          description: res.message || "An error occurred while creating this order.",
+        toast.error("Failed to Update Order", {
+          description: res.message || "An error occurred while updating this order.",
         })
         console.error(res.errors)
       } else {
-        toast.success("Order Created Successfully")
+        toast.success("Order Updated Successfully")
         router.refresh()
         onOpenChange(false)
       }
@@ -161,6 +219,7 @@ export function AddPurchaseOrderModal({
       })
       setLoading(false)
     }
+    onOrderChange(undefined)
   }
 
   const { fields, append, remove } = useFieldArray({
@@ -192,11 +251,13 @@ export function AddPurchaseOrderModal({
     } else {
       onOpenChange(false)
     }
+    onOrderChange(undefined)
   }
 
   const handleConfirmExit = () => {
     setShowExitConfirm(false)
     onOpenChange(false)
+    onOrderChange(undefined)
   }
 
   return (
@@ -212,7 +273,7 @@ export function AddPurchaseOrderModal({
           }}
         >
           <DialogHeader>
-            <DialogTitle>Create Purchase Order</DialogTitle>
+            <DialogTitle>Edit Purchase Order</DialogTitle>
             <DialogDescription>
               Step {currentStep} of {totalSteps}
             </DialogDescription>
@@ -235,7 +296,7 @@ export function AddPurchaseOrderModal({
                 <div className="space-y-6">
                   <h3 className="text-sm font-semibold text-foreground">Order Details</h3>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-3 gap-4">
                     <FormField
                       control={form.control}
                       name="supplierId"
@@ -287,6 +348,36 @@ export function AddPurchaseOrderModal({
                               {priorities.map((priority) => (
                                 <SelectItem key={priority.value} value={priority.value}>
                                   {priority.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="statusId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            Status <span className="text-destructive">*</span>
+                          </FormLabel>
+                          <Select
+                            onValueChange={(value) => field.onChange(Number(value))}
+                            value={field.value ? String(field.value) : ""}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select status" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {statuses.map((status) => (
+                                <SelectItem key={status.value} value={status.value}>
+                                  {status.label}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -376,7 +467,12 @@ export function AddPurchaseOrderModal({
                         variant="outline"
                         size="sm"
                         onClick={() =>
-                        append({ itemId: null, quantity: 1, purchasePrice: 0 })
+                            append({ 
+                                purchaseOrderItemId: null, 
+                                itemId: null, 
+                                quantity: 1, 
+                                purchasePrice: 0 
+                            })
                         }
                     >
                         <Plus className="mr-2 h-4 w-4" />
@@ -549,11 +645,15 @@ export function AddPurchaseOrderModal({
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">Priority:</span>
-                          <span className="font-medium">{getPriorityLabel(form.watch("priorityId"))}</span>
+                          <span className="font-medium">
+                            {getPriorityBadge(form.watch("priorityId"), getPriorityLabel(form.watch("priorityId")))}
+                          </span>
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">Status:</span>
-                          <span className="font-medium">{getStatusLabel(form.watch("statusId"))}</span>
+                          <span className="font-medium">
+                            {getStatusBadge(form.watch("statusId"), getStatusLabel(form.watch("statusId")))}
+                          </span>
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">Order Date:</span>
@@ -612,7 +712,7 @@ export function AddPurchaseOrderModal({
                     </Button>
                   ) : (
                     <Button type="submit" disabled={loading}>
-                      {loading ? "Creating..." : "Create Order"}
+                      {loading ? "Updating..." : "Update Order"}
                     </Button>
                   )}
                 </div>

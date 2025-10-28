@@ -48,7 +48,6 @@ export async function getSuppliers() {
 
   const activeOrdersBySupplier = await db.purchase_Order.groupBy({
     by: ['Supplier_ID'],
-    where: { Is_Active: true },
     _count: { Purchase_Order_ID: true },
   });
 

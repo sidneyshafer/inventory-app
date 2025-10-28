@@ -2,6 +2,8 @@ import * as z from "zod"
 
 export const formSchema = z.object({
 
+    purchaseOrderId: z.coerce.number(),
+
     supplierId: z.coerce.number({
         required_error: "Supplier is required",
         invalid_type_error: "Supplier is required",
@@ -17,22 +19,16 @@ export const formSchema = z.object({
         invalid_type_error: "Status is required",
     }),
 
-    orderDate: z.string({
-        required_error: "Order Date is required",
-        invalid_type_error: "Order Date is required",
-    }),
-
-    expectedDeliveryDate: z.string({
-        required_error: "Expected delivery date is required",
-        invalid_type_error: "Expected delivery date is required",
-    }),
+    orderDate: z.string(),
+    expectedDeliveryDate: z.string(),
 
     purchaseOrderItems: z.array(
     z.object({
+        purchaseOrderItemId: z.number().nullable(),
         itemId: z.number().nullable(),
         quantity: z.coerce.number(),
         purchasePrice: z.coerce.number(),
-    })).min(1, "At least one item is required"),
+    })),
 
 });
 

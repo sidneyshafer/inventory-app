@@ -122,12 +122,14 @@ export default function ItemsDashboard({
         <DeleteItemModal
           item={selectedItem} 
           open={openDeleteModal} 
-          onOpenChange={setOpenDeleteModal} 
+          onOpenChange={setOpenDeleteModal}
+          onItemChange={setSelectedItem}
         />
         <EditItemModal
           item={selectedItem}
           open={openEditModal}
           onOpenChange={setOpenEditModal}
+          onItemChange={setSelectedItem}
           categories={categories}
           locations={locations}
           statuses={statuses}
@@ -137,6 +139,7 @@ export default function ItemsDashboard({
           item={selectedItem}
           open={openDetailsModal}
           onOpenChange={setOpenDetailsModal}
+          onItemChange={setSelectedItem}
           categories={categories}
           locations={locations}
           suppliers={suppliers}

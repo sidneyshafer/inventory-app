@@ -100,7 +100,6 @@ model Purchase_Order {
   Purchase_Order_Status_ID   Int
   Created_Datetime           DateTime                @default(now()) @db.Timestamp(6)
   Updated_Datetime           DateTime?               @db.Timestamp(6)
-  Is_Active                  Boolean                 @default(true)
   Order_Date_Made            DateTime                @db.Date
   Order_Date_Received        DateTime?               @db.Date
   Purchase_Order_Priority_ID Int
@@ -119,6 +118,7 @@ model Purchase_Order_Item {
   Created_Datetime       DateTime       @default(now()) @db.Timestamp(6)
   Updated_Datetime       DateTime?      @db.Timestamp(6)
   Quantity               Int
+  Is_Active              Boolean        @default(true)
   Items                  Items          @relation(fields: [Item_ID], references: [Item_ID], onDelete: NoAction, onUpdate: NoAction)
   Purchase_Order         Purchase_Order @relation(fields: [Purchase_Order_ID], references: [Purchase_Order_ID], onDelete: NoAction, onUpdate: NoAction)
 }
