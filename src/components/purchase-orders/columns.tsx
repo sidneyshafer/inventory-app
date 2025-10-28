@@ -136,7 +136,12 @@ export const purchaseOrdersColumns = ({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+              className="cursor-pointer"
+                onClick={() => {
+                  setSelectedOrder(row.original)
+                  setOpenDetailsModal(true)
+                }}>
                 <Eye className="mr-2 h-4 w-4" />
                 View Details
               </DropdownMenuItem>

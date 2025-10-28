@@ -6,42 +6,53 @@ import { GetPurchaseOrdersSchema } from "@/lib/schemas/purchase-orders/search-pa
 
 export type PurchaseOrdersPromise = Prisma.Purchase_OrderGetPayload<{
   select: {
-      Purchase_Order_ID: true;
-      Suppliers: {
-        select: {
-          Supplier_ID: true;
-          Name: true;
-        }
-      },
-      Purchase_Order_Status: {
-        select: {
-          Purchase_Order_Status_ID: true;
-          Description: true;
-        };
+    Purchase_Order_ID: true;
+    Suppliers: {
+      select: {
+        Supplier_ID: true;
+        Name: true;
       };
-      Purchase_Order_Priority: {
-        select: {
-          Purchase_Order_Priority_ID: true;
-          Description: true;
-        };
+    };
+    Purchase_Order_Status: {
+      select: {
+        Purchase_Order_Status_ID: true;
+        Description: true;
       };
-      _count: {
-        select: {
-          Purchase_Order_Item: true;
-        },
-      },
-      Purchase_Order_Item: {
-        select: {
-          Purchase_Order_Item_ID: true;
-          Item_ID: true;
-          Purchase_Price: true;
-          Quantity: true;
+    };
+    Purchase_Order_Priority: {
+      select: {
+        Purchase_Order_Priority_ID: true;
+        Description: true;
+      };
+    };
+    Order_Date_Made: true;
+    Order_Date_Received: true;
+    Expected_Delivery_Date: true;
+    Created_Datetime: true;
+    Updated_Datetime: true;
+    _count: {
+      select: {
+        Purchase_Order_Item: true;
+      };
+    };
+    Purchase_Order_Item: {
+      select: {
+        Purchase_Order_Item_ID: true;
+        Item_ID: true;
+        Purchase_Price: true;
+        Quantity: true;
+        Items: {
+          select: {
+            Name: true;
+            SKU: true;
+          };
         };
       };
     };
-}> & { 
-  Item_Count: number 
-  Total_Amount: number
+  };
+}> & {
+  Item_Count: number;
+  Total_Amount: number;
   Order_Date_Made: string | null;
   Order_Date_Received: string | null;
   Expected_Delivery_Date: string | null;
@@ -66,12 +77,10 @@ export async function getPurchaseOrders(input: GetPurchaseOrdersSchema) {
   const searchTerms = Search_Term ? Search_Term.split(" ") : [];
 
   const searchResult: Prisma.Purchase_OrderWhereInput = Search_Term
-  ? {
-      OR: searchTerms
-        .flatMap((term) => {
+    ? {
+        OR: searchTerms.flatMap((term) => {
           const filters: Prisma.Purchase_OrderWhereInput[] = [];
 
-          // Match supplier name
           filters.push({
             Suppliers: {
               Name: {
@@ -81,7 +90,6 @@ export async function getPurchaseOrders(input: GetPurchaseOrdersSchema) {
             },
           });
 
-          // Match Purchase_Order_ID if numeric
           if (!isNaN(Number(term))) {
             filters.push({
               Purchase_Order_ID: Number(term),
@@ -90,15 +98,21 @@ export async function getPurchaseOrders(input: GetPurchaseOrdersSchema) {
 
           return filters;
         }),
-    }
-  : {};
+      }
+    : {};
 
   const where: Prisma.Purchase_OrderWhereInput = {
     ...searchResult,
-    Supplier_ID: suppliers ? { in: suppliers.split(".").map(Number) } : undefined,
-    Purchase_Order_Status_ID: statuses ? { in: statuses.split(".").map(Number) } : undefined,
-    Purchase_Order_Priority_ID: priorities ? { in: priorities.split(".").map(Number) } : undefined,
-  }
+    Supplier_ID: suppliers
+      ? { in: suppliers.split(".").map(Number) }
+      : undefined,
+    Purchase_Order_Status_ID: statuses
+      ? { in: statuses.split(".").map(Number) }
+      : undefined,
+    Purchase_Order_Priority_ID: priorities
+      ? { in: priorities.split(".").map(Number) }
+      : undefined,
+  };
 
   const purchaseOrders = await db.purchase_Order.findMany({
     where,
@@ -108,19 +122,19 @@ export async function getPurchaseOrders(input: GetPurchaseOrdersSchema) {
         select: {
           Supplier_ID: true,
           Name: true,
-        }
+        },
       },
       Purchase_Order_Status: {
         select: {
           Purchase_Order_Status_ID: true,
           Description: true,
-        }
+        },
       },
       Purchase_Order_Priority: {
         select: {
           Purchase_Order_Priority_ID: true,
           Description: true,
-        }
+        },
       },
       Order_Date_Made: true,
       Order_Date_Received: true,
@@ -138,6 +152,12 @@ export async function getPurchaseOrders(input: GetPurchaseOrdersSchema) {
           Item_ID: true,
           Purchase_Price: true,
           Quantity: true,
+          Items: {
+            select: {
+              Name: true,
+              SKU: true,
+            },
+          },
         },
       },
     },
@@ -153,8 +173,7 @@ export async function getPurchaseOrders(input: GetPurchaseOrdersSchema) {
     Item_Count: po._count.Purchase_Order_Item,
     Total_Amount: po.Purchase_Order_Item.reduce(
       (sum, item) =>
-        sum +
-        (Number(item?.Purchase_Price || 0) * Number(item?.Quantity || 0)),
+        sum + Number(item?.Purchase_Price || 0) * Number(item?.Quantity || 0),
       0
     ),
     Order_Date_Made: po.Order_Date_Made
@@ -172,7 +191,19 @@ export async function getPurchaseOrders(input: GetPurchaseOrdersSchema) {
     Updated_Datetime: po.Updated_Datetime
       ? po.Updated_Datetime.toISOString().split("T")[0]
       : null,
-    }));
+    Purchase_Order_Item: po.Purchase_Order_Item.map((item) => ({
+      Purchase_Order_Item_ID: item.Purchase_Order_Item_ID,
+      Item_ID: item.Item_ID,
+      Purchase_Price: Number(item.Purchase_Price),
+      Quantity: Number(item.Quantity),
+      Items: item.Items
+        ? {
+            Name: item.Items.Name,
+            SKU: item.Items.SKU,
+          }
+        : null,
+    })),
+  }));
 
   return {
     data: purchaseOrdersWithItemCount,

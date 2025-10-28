@@ -19,6 +19,7 @@ import { purchaseOrderFilterFields } from "./filter-config"
 import { useState } from "react"
 import { AddPurchaseOrderModal } from "./modals/add-purchase-order-modal"
 import { EditPurchaseOrderModal } from "./modals/edit-purchase-order-modal"
+import { ViewPurchaseOrderModal } from "./modals/view-purchase-order-modal"
 
 interface PurchaseOrderDashboardProps {
   initialData: PurchaseOrdersPromise[]
@@ -121,6 +122,15 @@ export default function PurchaseOrderDashboard({
           onOrderChange={setSelectedOrder}
           open={openEditOrder}
           onOpenChange={setOpenEditOrder}
+          suppliers={suppliers}
+          statuses={statuses}
+          priorities={priorities}
+        />
+        <ViewPurchaseOrderModal 
+          order={selectedOrder}
+          onOrderChange={setSelectedOrder}
+          open={openDetailsOrder}
+          onOpenChange={setOpenDetailsOrder}
           suppliers={suppliers}
           statuses={statuses}
           priorities={priorities}
