@@ -53,6 +53,7 @@ interface EditItemModalProps {
   item: ItemsPromise
   open: boolean
   onOpenChange: (open: boolean) => void
+  onItemChange: (item: ItemsPromise | undefined) => void
   categories: FilterOption[]
   suppliers: FilterOption[]
   locations: FilterOption[]
@@ -63,6 +64,7 @@ export function EditItemModal({
   item,
   open,
   onOpenChange,
+  onItemChange,
   categories, 
   suppliers, 
   locations, 
@@ -148,6 +150,7 @@ export function EditItemModal({
       })
       setLoading(false)
     }
+    onItemChange(undefined)
   }
     
   useEffect(() => {
@@ -160,11 +163,13 @@ export function EditItemModal({
     } else {
       onOpenChange(false)
     }
+    onItemChange(undefined)
   }
 
   const handleConfirmExit = () => {
     setShowExitConfirm(false)
     onOpenChange(false)
+    onItemChange(undefined)
   }
 
   return (

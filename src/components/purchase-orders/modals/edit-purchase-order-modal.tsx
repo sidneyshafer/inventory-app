@@ -67,6 +67,7 @@ import { editPurchaseOrderAction } from "@/server/actions/purchase-orders/edit/a
 interface EditPurchaseOrderModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  onOrderChange: (order: PurchaseOrdersPromise | undefined) => void
   order: PurchaseOrdersPromise
   suppliers: FilterOption[]
   priorities: FilterOption[]
@@ -79,6 +80,7 @@ export function EditPurchaseOrderModal({
   statuses,
   open,
   onOpenChange,
+  onOrderChange,
   order
 }: EditPurchaseOrderModalProps) {
   const router = useRouter()
@@ -194,6 +196,7 @@ export function EditPurchaseOrderModal({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true)
+    console.log(values)
     
     try {
       const res = await editPurchaseOrderAction(values)
@@ -206,7 +209,7 @@ export function EditPurchaseOrderModal({
         })
         console.error(res.errors)
       } else {
-        toast.success("Order Created Successfully")
+        toast.success("Order Updated Successfully")
         router.refresh()
         onOpenChange(false)
       }
@@ -216,6 +219,7 @@ export function EditPurchaseOrderModal({
       })
       setLoading(false)
     }
+    onOrderChange(undefined)
   }
 
   const { fields, append, remove } = useFieldArray({
@@ -247,11 +251,13 @@ export function EditPurchaseOrderModal({
     } else {
       onOpenChange(false)
     }
+    onOrderChange(undefined)
   }
 
   const handleConfirmExit = () => {
     setShowExitConfirm(false)
     onOpenChange(false)
+    onOrderChange(undefined)
   }
 
   return (

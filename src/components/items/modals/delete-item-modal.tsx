@@ -19,12 +19,14 @@ interface DeleteItemModalProps {
   item: ItemsPromise
   open: boolean
   onOpenChange: (open: boolean) => void
+  onItemChange: (item: ItemsPromise | undefined) => void
 }
 
 export function DeleteItemModal({ 
   item,
   open,
-  onOpenChange
+  onOpenChange,
+  onItemChange
 }: DeleteItemModalProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
@@ -60,10 +62,14 @@ export function DeleteItemModal({
       })
       setLoading(false)
     }
+    onItemChange(undefined)
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={() => {
+        onOpenChange(false)
+        onItemChange(undefined)
+      }}>
       <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
           <div className="flex items-start gap-4">
@@ -116,7 +122,10 @@ export function DeleteItemModal({
         </div>
 
         <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant="outline" onClick={() => {
+            onOpenChange(false)
+            onItemChange(undefined)
+          }}>
             Cancel
           </Button>
           <Button 

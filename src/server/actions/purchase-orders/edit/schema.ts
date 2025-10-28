@@ -19,27 +19,15 @@ export const formSchema = z.object({
         invalid_type_error: "Status is required",
     }),
 
-    orderDate: z.string({
-        required_error: "Order Date is required",
-        invalid_type_error: "Order Date is required",
-    }),
+    orderDate: z.string(),
+    expectedDeliveryDate: z.string(),
 
-    expectedDeliveryDate: z.string({
-        required_error: "Expected delivery date is required",
-        invalid_type_error: "Expected delivery date is required",
-    }),
-
-    purchaseOrderItems: z.array(z.object({
+    purchaseOrderItems: z.array(
+    z.object({
         purchaseOrderItemId: z.number().nullable(),
         itemId: z.number().nullable(),
-        quantity: z.coerce.number({
-            required_error: "Quantity is required",
-            invalid_type_error: "Quantity is required",
-        }),
-        purchasePrice: z.coerce.number({
-            required_error: "Price is required",
-            invalid_type_error: "Price is required",
-        }),
+        quantity: z.coerce.number(),
+        purchasePrice: z.coerce.number(),
     })),
 
 });

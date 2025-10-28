@@ -152,7 +152,9 @@ export async function getPurchaseOrders(input: GetPurchaseOrdersSchema) {
     ...po,
     Item_Count: po._count.Purchase_Order_Item,
     Total_Amount: po.Purchase_Order_Item.reduce(
-      (sum, item) => sum + Number(item.Purchase_Price),
+      (sum, item) =>
+        sum +
+        (Number(item?.Purchase_Price || 0) * Number(item?.Quantity || 0)),
       0
     ),
     Order_Date_Made: po.Order_Date_Made

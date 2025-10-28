@@ -118,6 +118,7 @@ export default function PurchaseOrderDashboard({
       <>
         <EditPurchaseOrderModal 
           order={selectedOrder}
+          onOrderChange={setSelectedOrder}
           open={openEditOrder}
           onOpenChange={setOpenEditOrder}
           suppliers={suppliers}

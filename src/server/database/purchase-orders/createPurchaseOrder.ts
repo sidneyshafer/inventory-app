@@ -15,8 +15,8 @@ export async function createPurchaseOrder({ ...args }: FormData) {
                     Supplier_ID: Number(args.supplierId),
                     Purchase_Order_Status_ID: Number(args.statusId),
                     Purchase_Order_Priority_ID: Number(args.priorityId),
-                    Order_Date_Made: args.orderDate,
-                    Expected_Delivery_Date: args.expectedDeliveryDate,
+                    Order_Date_Made: new Date(args.orderDate),
+                    Expected_Delivery_Date: new Date(args.expectedDeliveryDate),
                     Created_Datetime: new Date()
                 }
             });
@@ -27,6 +27,7 @@ export async function createPurchaseOrder({ ...args }: FormData) {
                         Purchase_Order_ID: purchaseOrder.Purchase_Order_ID,
                         Item_ID: Number(item.itemId),
                         Purchase_Price: item.purchasePrice,
+                        Is_Active: true,
                         Quantity: item.quantity,
                         Created_Datetime: new Date(),
                     },

@@ -27,17 +27,12 @@ export const formSchema = z.object({
         invalid_type_error: "Expected delivery date is required",
     }),
 
-    purchaseOrderItems: z.array(z.object({
+    purchaseOrderItems: z.array(
+    z.object({
         itemId: z.number().nullable(),
-        quantity: z.coerce.number({
-            required_error: "Quantity is required",
-            invalid_type_error: "Quantity is required",
-        }),
-        purchasePrice: z.coerce.number({
-            required_error: "Price is required",
-            invalid_type_error: "Price is required",
-        }),
-    })),
+        quantity: z.coerce.number(),
+        purchasePrice: z.coerce.number(),
+    })).min(1, "At least one item is required"),
 
 });
 
