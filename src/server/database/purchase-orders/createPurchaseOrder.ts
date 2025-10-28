@@ -15,7 +15,6 @@ export async function createPurchaseOrder({ ...args }: FormData) {
                     Supplier_ID: Number(args.supplierId),
                     Purchase_Order_Status_ID: Number(args.statusId),
                     Purchase_Order_Priority_ID: Number(args.priorityId),
-                    Is_Active: true,
                     Order_Date_Made: args.orderDate,
                     Expected_Delivery_Date: args.expectedDeliveryDate,
                     Created_Datetime: new Date()

@@ -11,8 +11,8 @@ export type PurchaseOrdersPromise = Prisma.Purchase_OrderGetPayload<{
         select: {
           Supplier_ID: true;
           Name: true;
-        };
-      };
+        }
+      },
       Purchase_Order_Status: {
         select: {
           Purchase_Order_Status_ID: true;
@@ -25,13 +25,26 @@ export type PurchaseOrdersPromise = Prisma.Purchase_OrderGetPayload<{
           Description: true;
         };
       };
-      Is_Active: true;
+      _count: {
+        select: {
+          Purchase_Order_Item: true;
+        },
+      },
+      Purchase_Order_Item: {
+        select: {
+          Purchase_Order_Item_ID: true;
+          Item_ID: true;
+          Purchase_Price: true;
+          Quantity: true;
+        };
+      };
     };
 }> & { 
   Item_Count: number 
   Total_Amount: number
   Order_Date_Made: string | null;
   Order_Date_Received: string | null;
+  Expected_Delivery_Date: string | null;
   Created_Datetime: string | null;
   Updated_Datetime: string | null;
 };
@@ -81,7 +94,6 @@ export async function getPurchaseOrders(input: GetPurchaseOrdersSchema) {
   : {};
 
   const where: Prisma.Purchase_OrderWhereInput = {
-    Is_Active: true,
     ...searchResult,
     Supplier_ID: suppliers ? { in: suppliers.split(".").map(Number) } : undefined,
     Purchase_Order_Status_ID: statuses ? { in: statuses.split(".").map(Number) } : undefined,
@@ -110,9 +122,9 @@ export async function getPurchaseOrders(input: GetPurchaseOrdersSchema) {
           Description: true,
         }
       },
-      Is_Active: true,
       Order_Date_Made: true,
       Order_Date_Received: true,
+      Expected_Delivery_Date: true,
       Created_Datetime: true,
       Updated_Datetime: true,
       _count: {
@@ -121,7 +133,12 @@ export async function getPurchaseOrders(input: GetPurchaseOrdersSchema) {
         },
       },
       Purchase_Order_Item: {
-        select: { Purchase_Price: true },
+        select: {
+          Purchase_Order_Item_ID: true,
+          Item_ID: true,
+          Purchase_Price: true,
+          Quantity: true,
+        },
       },
     },
     skip: (page - 1) * pageSize,
@@ -143,6 +160,9 @@ export async function getPurchaseOrders(input: GetPurchaseOrdersSchema) {
       : null,
     Order_Date_Received: po.Order_Date_Received
       ? po.Order_Date_Received.toISOString().split("T")[0]
+      : null,
+    Expected_Delivery_Date: po.Expected_Delivery_Date
+      ? po.Expected_Delivery_Date.toISOString().split("T")[0]
       : null,
     Created_Datetime: po.Created_Datetime
       ? po.Created_Datetime.toISOString().split("T")[0]
