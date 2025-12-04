@@ -25,11 +25,6 @@ export type PurchaseOrdersPromise = Prisma.Purchase_OrderGetPayload<{
         Description: true;
       };
     };
-    Order_Date_Made: true;
-    Order_Date_Received: true;
-    Expected_Delivery_Date: true;
-    Created_Datetime: true;
-    Updated_Datetime: true;
     _count: {
       select: {
         Purchase_Order_Item: true;
@@ -176,21 +171,11 @@ export async function getPurchaseOrders(input: GetPurchaseOrdersSchema) {
         sum + Number(item?.Purchase_Price || 0) * Number(item?.Quantity || 0),
       0
     ),
-    Order_Date_Made: po.Order_Date_Made
-      ? po.Order_Date_Made.toISOString().split("T")[0]
-      : null,
-    Order_Date_Received: po.Order_Date_Received
-      ? po.Order_Date_Received.toISOString().split("T")[0]
-      : null,
-    Expected_Delivery_Date: po.Expected_Delivery_Date
-      ? po.Expected_Delivery_Date.toISOString().split("T")[0]
-      : null,
-    Created_Datetime: po.Created_Datetime
-      ? po.Created_Datetime.toISOString().split("T")[0]
-      : null,
-    Updated_Datetime: po.Updated_Datetime
-      ? po.Updated_Datetime.toISOString().split("T")[0]
-      : null,
+    Order_Date_Made: po.Order_Date_Made?.toISOString().split("T")[0] ?? null,
+    Order_Date_Received: po.Order_Date_Received?.toISOString().split("T")[0] ?? null,
+    Expected_Delivery_Date: po.Expected_Delivery_Date?.toISOString().split("T")[0] ?? null,
+    Created_Datetime: po.Created_Datetime?.toISOString().split("T")[0] ?? null,
+    Updated_Datetime: po.Updated_Datetime?.toISOString().split("T")[0] ?? null,
     Purchase_Order_Item: po.Purchase_Order_Item.map((item) => ({
       Purchase_Order_Item_ID: item.Purchase_Order_Item_ID,
       Item_ID: item.Item_ID,

@@ -20,6 +20,7 @@ import { useState } from "react"
 import { AddPurchaseOrderModal } from "./modals/add-purchase-order-modal"
 import { EditPurchaseOrderModal } from "./modals/edit-purchase-order-modal"
 import { ViewPurchaseOrderModal } from "./modals/view-purchase-order-modal"
+import { CancelOrderModal } from "./modals/cancel-purchase-order"
 
 interface PurchaseOrderDashboardProps {
   initialData: PurchaseOrdersPromise[]
@@ -134,6 +135,12 @@ export default function PurchaseOrderDashboard({
           suppliers={suppliers}
           statuses={statuses}
           priorities={priorities}
+        />
+        <CancelOrderModal 
+          order={selectedOrder}
+          onOrderChange={setSelectedOrder}
+          open={openCancelOrder}
+          onOpenChange={setOpenCancelOrder}
         />
       </>
     )}

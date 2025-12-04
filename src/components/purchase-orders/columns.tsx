@@ -158,11 +158,21 @@ export const purchaseOrdersColumns = ({
                 <Download className="mr-2 h-4 w-4" />
                 Download PDF
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive">
-                <Trash2 className="mr-2 h-4 w-4" />
-                Cancel Order
-              </DropdownMenuItem>
+              {row.original.Purchase_Order_Status.Purchase_Order_Status_ID !== 7 && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    className="text-destructive"
+                    onClick={() => {
+                      setSelectedOrder(row.original)
+                      setOpenCancelModal(true)
+                    }}
+                    >  
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Cancel Order
+                  </DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
